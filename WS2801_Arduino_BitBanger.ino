@@ -1,8 +1,5 @@
 #include <Adafruit_WS2801.h>
 #include "SPI.h" // Comment out this line if using Trinket or Gemma
-#ifdef __AVR_ATtiny85__
-#include <avr/power.h>
-#endif
 
 /*****************************************************************************
   Example sketch for driving Adafruit WS2801 pixels!
@@ -46,9 +43,6 @@ Adafruit_WS2801 strip = Adafruit_WS2801(INITIAL_NUM_LED);
 
 void setup() {
   Serial.begin(9600);
-#if defined(__AVR_ATtiny85__) && (F_CPU == 16000000L)
-  clock_prescale_set(clock_div_1); // Enable 16 MHz on Trinket
-#endif
 
   strip.begin();
 
@@ -59,7 +53,7 @@ void setup() {
 
 void loop() {
   while(Serial.available()) {
-    a= Serial.readString();// read the incoming data as string
+    const string a = Serial.readString();// read the incoming data as string
     Serial.println(a);
     if (a == "$INIT_LED_NUM$00C8$") {
       strip.updateLength(200);
