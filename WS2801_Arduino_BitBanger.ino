@@ -37,7 +37,7 @@ uint8_t clockPin = 13;    // Blue wire on China PixelStripe ==> SCK D13
 // and the +5V wire to a +5V supply
 
 // Set the first variable to the NUMBER of pixels. Number of pixels in a row
-const int INITIAL_NUM_LED = 200;
+const int INITIAL_NUM_LED = 1;
 //Adafruit_WS2801 strip = Adafruit_WS2801(INITIAL_NUM_LED, dataPin, clockPin);
 
 // Optional: leave off pin numbers to use hardware SPI
@@ -58,7 +58,7 @@ void setup() {
 }
 
 void loop() {
-  
+
   rainbow(100);
 }
 
@@ -142,4 +142,3 @@ uint32_t Wheel(byte WheelPos)
     return Color(0, WheelPos * 3, 255 - WheelPos * 3);
   }
 }
-
