@@ -58,7 +58,13 @@ void setup() {
 }
 
 void loop() {
-
+  while(Serial.available()) {
+    a= Serial.readString();// read the incoming data as string
+    Serial.println(a);
+    if (a == "$INIT_LED_NUM$00C8$") {
+      strip.updateLength(200);
+    }
+  }
   rainbow(100);
 }
 
