@@ -53,7 +53,7 @@ void setup() {
 
 void loop() {
   while(Serial.available()) {
-    const string a = Serial.readString();// read the incoming data as string
+    const String a = Serial.readString();// read the incoming data as string
     Serial.println(a);
     if (a == "$INIT_LED_NUM$00C8$") {
       strip.updateLength(200);
