@@ -10,7 +10,7 @@ void Command::Init(const uint8_t s){
   if(!initialized) {
     if (!hasCommand) {
       if (s == INIT) {  // Init input (length = numParam, colors)
-        c = s;
+        command = s;
         hasCommand = true;
         numParam = 0;
         commandPos = 0;
