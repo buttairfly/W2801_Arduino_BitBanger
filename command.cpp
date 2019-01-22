@@ -80,25 +80,25 @@ void Command::processNumParam(const uint8_t s) {
 }
 
 void Command::processPixel(const uint8_t s) {
-
+  Serial.println("processPixel");
 }
 
 void Command::processFrame(const uint8_t s) {
-
+  Serial.println("processFrame");
 }
 
 /**
  * hex2int
  * take a hex string and convert it to a 8bit number
  */
-uint16_t hex2uint16(uint16_t val, uint8_t hex, uint32_t pos) {
+uint16_t Command::hex2uint16(uint16_t val, uint8_t hex, uint32_t pos) {
   if(pos == 3) {
     val = val << 8;
   }
   return val | (hex2uint8(val, hex) & 0xFF);
 }
 
-unit8_t hex2uint8(uint8_t val, uint8_t hex) {
+uint8_t Command::hex2uint8(uint8_t val, uint8_t hex) {
   // transform hex character to the 4bit equivalent number, using the ascii table indexes
   if (hex >= '0' && hex <= '9') hex = hex - '0';
   else if (hex >= 'a' && hex <='f') hex = hex - 'a' + 10;

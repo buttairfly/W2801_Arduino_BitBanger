@@ -25,6 +25,9 @@ class Command {
      void processPixel(const uint8_t c);
      void processFrame(const uint8_t c);
 
+     uint16_t hex2uint16(uint16_t val, uint8_t hex, uint32_t pos);
+     uint8_t hex2uint8(uint8_t val, uint8_t hex);
+
      boolean hasCommand;
      boolean hasNumParam;
      boolean initialized;

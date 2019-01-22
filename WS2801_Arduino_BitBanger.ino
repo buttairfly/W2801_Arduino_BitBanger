@@ -54,12 +54,12 @@ void setup() {
     demo();
     initCommand();
   }
-  Serial.PrintLn("Initialized: " + strip.numPixels());
+  Serial.println("Initialized: " + strip.numPixels());
   demo();
 }
 
 void loop() {
-  command.ProcessCommand();
+  processCommand();
 }
 
 void initCommand(void) {
