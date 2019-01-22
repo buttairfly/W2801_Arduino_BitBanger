@@ -1,5 +1,6 @@
 #include <Adafruit_WS2801.h>
 #include "SPI.h" // Comment out this line if using Trinket or Gemma
+#include "command.hpp"
 
 /*****************************************************************************
   Example sketch for driving Adafruit WS2801 pixels!
@@ -40,26 +41,39 @@ const int INITIAL_NUM_LED = 1;
 // Optional: leave off pin numbers to use hardware SPI
 // (pinout is then specific to each board and can't be changed)
 Adafruit_WS2801 strip = Adafruit_WS2801(INITIAL_NUM_LED);
+Command command = Command(&strip);
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(1152000);
 
   strip.begin();
 
   // Update LED contents, to start they are all 'off'
   strip.show();
+  while(!command.IsInitialized()) {
+    demo();
+    initCommand();
+  }
+  Serial.PrintLn("Initialized: " + strip.numPixels());
   demo();
 }
 
 void loop() {
-  while(Serial.available()) {
-    const String a = Serial.readString();// read the incoming data as string
-    Serial.println(a);
-    if (a == "$INIT_LED_NUM$00C8$") {
-      strip.updateLength(200);
-    }
+  command.ProcessCommand();
+}
+
+void initCommand(void) {
+  while(Serial.available() && !command.IsInitialized()) {
+    const uint8_t s = Serial.read();// read the incoming char
+    command.Init(s);
   }
-  rainbow(100);
+}
+
+void processCommand(void) {
+  while(Serial.available()) {
+    const uint8_t s = Serial.read();// read the incoming char
+    command.ProcessCommand(s);
+  }
 }
 
 void demo() {
