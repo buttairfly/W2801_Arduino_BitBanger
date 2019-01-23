@@ -52,11 +52,14 @@ void setup() {
     demo();
     initCommand();
   }
-  Serial.print("Initialized: " + strip.numPixels() + "\n");
+  Serial.print("Initialized: ");
+  Serial.print(strip.numPixels());
+  Serial.print('\n');
   demo();
 }
 
 void loop() {
+  const int waitTime = 5;
   colorWipe(Color(255, 0, 0), waitTime);
   colorWipe(Color(0, 255, 0), waitTime);
   colorWipe(Color(0, 0, 255), waitTime);
