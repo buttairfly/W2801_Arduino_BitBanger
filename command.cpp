@@ -20,6 +20,7 @@ void Command::Init(const uint8_t s){
       if (commandPos >= INIT_LEN_CHAR) {
         initialized = true;
         strip->updateLength(numParam);
+        Serial.print("numParam " + numParam + "\n")
         reset();
       }
     }
@@ -80,11 +81,11 @@ void Command::processNumParam(const uint8_t s) {
 }
 
 void Command::processPixel(const uint8_t s) {
-  Serial.println("processPixel");
+  Serial.print("processPixel" + s + "\n");
 }
 
 void Command::processFrame(const uint8_t s) {
-  Serial.println("processFrame");
+  Serial.print("processFrame:" + s + "\n");
 }
 
 /**

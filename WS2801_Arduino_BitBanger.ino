@@ -47,19 +47,19 @@ void setup() {
   Serial.begin(1152000);
 
   strip.begin();
-
-  // Update LED contents, to start they are all 'off'
   strip.show();
   while(!command.IsInitialized()) {
     demo();
     initCommand();
   }
-  Serial.println("Initialized: " + strip.numPixels());
+  Serial.print("Initialized: " + strip.numPixels() + "\n");
   demo();
 }
 
 void loop() {
-  processCommand();
+  colorWipe(Color(255, 0, 0), waitTime);
+  colorWipe(Color(0, 255, 0), waitTime);
+  colorWipe(Color(0, 0, 255), waitTime);
 }
 
 void initCommand(void) {
