@@ -21,7 +21,7 @@ void Command::Init(const uint8_t s){
         initialized = true;
         strip->updateLength(numParam);
         Serial.print("numParam ");
-        Serial.print(numParam);
+        Serial.print(numParam, HEX);
         Serial.print('\n');
         reset();
       }
@@ -98,7 +98,11 @@ uint16_t Command::hex2uint16(uint16_t val, uint8_t hex, uint32_t pos) {
   if(pos == 3) {
     val = val << 8;
   }
-  return val | (hex2uint8(val, hex) & 0xFF);
+  val = val | (hex2uint8(val, hex) & 0xFF);
+  Serial.print("hex2uint16 ");
+  Serial.print(val, HEX);
+  Serial.print('\n')
+  return val
 }
 
 uint8_t Command::hex2uint8(uint8_t val, uint8_t hex) {

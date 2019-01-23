@@ -53,7 +53,7 @@ void setup() {
     initCommand();
   }
   Serial.print("Initialized: ");
-  Serial.print(strip.numPixels());
+  Serial.print(strip.numPixels(), HEX);
   Serial.print('\n');
   demo();
 }
