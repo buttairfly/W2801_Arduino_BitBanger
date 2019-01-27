@@ -95,12 +95,15 @@ void Command::processFrame(const uint8_t s) {
  * take a hex string and convert it to a 8bit number
  */
 uint16_t Command::hex2uint16(uint16_t val, uint8_t hex, uint32_t pos) {
+  if(pos == 0) {
+    val = 0;
+  }
   if(pos == 2) {
     val = val << 8;
   }
   val = val | (hex2uint8(val, hex) & 0xFF);
   Serial.print(pos);
-  Serial.print(';');
+  Serial.print(':');
   Serial.print(val, HEX);
   Serial.print(';');
   return val;

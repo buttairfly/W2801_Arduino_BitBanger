@@ -52,9 +52,9 @@ void setup() {
     demo();
     initCommand();
   }
-  Serial.print("Initialized: ");
+  Serial.print("Init leds: (0x");
   Serial.print(strip.numPixels(), HEX);
-  Serial.print('\n');
+  Serial.print(')\n');
   demo();
 }
 
@@ -79,44 +79,36 @@ void processCommand(void) {
   }
 }
 
+static uint16_t rainbowCyclePos = 0;
 void demo() {
   const int waitTime = 0;
-  // Some example procedures showing how to display to the pixels
-  colorWipe(Color(255, 0, 0), waitTime);
-  colorWipe(Color(0, 255, 0), waitTime);
-  colorWipe(Color(0, 0, 255), waitTime);
-  rainbow(waitTime);
-  rainbowCycle(waitTime);
+  rainbowCyclePos++;
+  if(rainbowCyclePos >= 256*5) {
+    rainbowCyclePos = 0;
+  }
+  rainbowCycle(rainbowCyclePos);
 }
 
-void rainbow(uint8_t wait) {
-  int i, j;
-
-  for (j = 0; j < 256; j++) {   // 3 cycles of all 256 colors in the wheel
-    for (i = 0; i < strip.numPixels(); i++) {
-      strip.setPixelColor(i, Wheel( (i + j) % 255));
-    }
-    strip.show();   // write all the pixels out
-    delay(wait);
+void rainbow(uint8_t j) {
+  int i;
+  for (i = 0; i < strip.numPixels(); i++) {
+    strip.setPixelColor(i, Wheel( (i + j) % 255));
   }
+  strip.show();   // write all the pixels out
 }
 
 // Slightly different, this one makes the rainbow wheel equally distributed
 // along the chain
-void rainbowCycle(uint8_t wait) {
-  int i, j;
-
-  for (j = 0; j < 256 * 5; j++) {   // 5 cycles of all 25 colors in the wheel
-    for (i = 0; i < strip.numPixels(); i++) {
-      // tricky math! we use each pixel as a fraction of the full 96-color wheel
-      // (thats the i / strip.numPixels() part)
-      // Then add in j which makes the colors go around per pixel
-      // the % 96 is to make the wheel cycle around
-      strip.setPixelColor(i, Wheel( ((i * 256 / strip.numPixels()) + j) % 256) );
-    }
-    strip.show();   // write all the pixels out
-    delay(wait);
+void rainbowCycle(uint16_t j) {
+  int i;
+  for (i = 0; i < strip.numPixels(); i++) {
+    // tricky math! we use each pixel as a fraction of the full 96-color wheel
+    // (thats the i / strip.numPixels() part)
+    // Then add in j which makes the colors go around per pixel
+    // the % 96 is to make the wheel cycle around
+    strip.setPixelColor(i, Wheel( ((i * 256 / strip.numPixels()) + j) % 256) );
   }
+  strip.show();   // write all the pixels out
 }
 
 // fill the dots one after the other with said color
