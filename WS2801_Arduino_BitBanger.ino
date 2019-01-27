@@ -52,17 +52,11 @@ void setup() {
     demo();
     initCommand();
   }
-  Serial.print("Init leds: (0x");
-  Serial.print(strip.numPixels(), HEX);
-  Serial.print(')\n');
   demo();
 }
 
 void loop() {
-  const int waitTime = 5;
-  colorWipe(Color(255, 0, 0), waitTime);
-  colorWipe(Color(0, 255, 0), waitTime);
-  colorWipe(Color(0, 0, 255), waitTime);
+  demo();
 }
 
 void initCommand(void) {
@@ -87,6 +81,10 @@ void demo() {
     rainbowCyclePos = 0;
   }
   rainbowCycle(rainbowCyclePos);
+
+  Serial.print("Init leds: (0x");
+  Serial.print(strip.numPixels(), HEX);
+  Serial.print(')\n');
 }
 
 void rainbow(uint8_t j) {
