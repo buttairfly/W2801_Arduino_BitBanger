@@ -43,15 +43,28 @@ const int INITIAL_NUM_LED = 1;
 Adafruit_WS2801 strip = Adafruit_WS2801(INITIAL_NUM_LED);
 Command command = Command(&strip);
 
+
+
 void setup() {
   Serial.begin(1152000);
 
   strip.begin();
   strip.show();
+  const unsigned long WAIT_TIME_MS = 10;
+  unsigned long lastTime = 0;
+  unsigned long time;
   while(!command.IsInitialized()) {
-    demo();
+    time = millis();
+    if(time - lastTime > WAIT_TIME_MS){
+      lastTime = time;
+      demo();
+    }
     initCommand();
   }
+
+  Serial.print("Init leds: (0x");
+  Serial.print(strip.numPixels(), HEX);
+  Serial.print(')\n');
   demo();
 }
 
@@ -81,10 +94,6 @@ void demo() {
     rainbowCyclePos = 0;
   }
   rainbowCycle(rainbowCyclePos);
-
-  Serial.print("Init leds: (0x");
-  Serial.print(strip.numPixels(), HEX);
-  Serial.print(')\n');
 }
 
 void rainbow(uint8_t j) {

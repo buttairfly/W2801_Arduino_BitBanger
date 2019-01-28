@@ -115,5 +115,12 @@ uint8_t Command::hex2uint8(uint8_t val, uint8_t hex) {
   else if (hex >= 'a' && hex <='f') hex = hex - 'a' + 10;
   else if (hex >= 'A' && hex <='F') hex = hex - 'A' + 10;
   // shift 4 to make space for new digit, and add the 4 bits of the new digit
-  return (val << 4) | (hex & 0xF);
+  val = (val << 4) | (hex & 0xF);
+
+  Serial.print('h');
+  Serial.print(hex);
+  Serial.print(':');
+  Serial.print(val, HEX);
+  Serial.print(';h');
+  return val
 }
