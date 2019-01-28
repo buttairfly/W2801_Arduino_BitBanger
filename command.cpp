@@ -122,5 +122,5 @@ uint8_t Command::hex2uint8(uint8_t val, uint8_t hex) {
   Serial.print(':');
   Serial.print(val, HEX);
   Serial.print(';h');
-  return val
+  return val;
 }
