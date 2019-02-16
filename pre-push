@@ -4,8 +4,9 @@ set -e
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-sudo arduino-cli compile \
+ROOT_DIR="$( dirname $( dirname "${DIR}" ) )"
+
+arduino-cli compile \
   --fqbn arduino:avr:nano \
   --format json \
-  ${DIR}
-
+  ${ROOT_DIR}
