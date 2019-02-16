@@ -96,22 +96,31 @@ void Command::processFrame(const uint8_t s) {
  * take a hex string and convert it to a 8bit number
  */
 uint16_t Command::hex2uint16(uint16_t val, uint8_t hex, uint32_t pos) {
+
+  Serial.print("hex2uint16:");
+  Serial.print(val, HEX);
+
   if(pos == 0) {
-    val = 0;
+    val = 0x0000;
   }
   if(pos == 2) {
     val = val << 8;
   }
+
+  Serial.print(":");
+  Serial.print(val, HEX);
+
   val = val | (hex2uint8(val, hex) & 0xFF);
 
-  Serial.print('hex2uint16:');
+  Serial.print(":");
   Serial.print(pos);
-  Serial.print(':');
+  Serial.print(":");
   Serial.print(val, HEX);
-  Serial.print(';');
-  Serial.print('\n');
+  Serial.print(";");
+  Serial.print("\n");
   Serial.flush();
-  return val;
+
+  return val & 0xFFFF;
 }
 
 uint8_t Command::hex2uint8(uint8_t val, uint8_t hex) {
@@ -122,13 +131,5 @@ uint8_t Command::hex2uint8(uint8_t val, uint8_t hex) {
   // shift 4 to make space for new digit, and add the 4 bits of the new digit
   val = (val << 4) | (hex & 0xF);
 
-  Serial.print('hex2uint8:');
-  Serial.print('h');
-  Serial.print(hex);
-  Serial.print(':');
-  Serial.print(val, HEX);
-  Serial.print(';h');
-  Serial.print('\n');
-  Serial.flush();
-  return val;
+  return val & 0xFF;
 }
