@@ -11,10 +11,7 @@ void Command::Init(const uint8_t s){
     if (!hasCommand) {
       if (s == INIT) {  // Init input (length = numParam, colors)
         initCommand(s);
-      } else {
-        reset();
-        return;
-      }
+      } else return;
     } else { // hasCommand
       processNumParam(s);
       if (paramPos >= INIT_LEN_CHAR) {
@@ -59,7 +56,6 @@ void Command::ProcessCommand(const uint8_t s){
         reset();
         break;
       default:
-        reset();
         break;
     }
   } else { // process command
@@ -97,6 +93,8 @@ void Command::ProcessCommand(const uint8_t s){
         if(numParam > strip->numPixels()) {
           Serial.print("NumParam error:");
           Serial.print(numParam);
+          Serial.print(",command:");
+          Serial.print(command);
           Serial.print("\n");
           Serial.flush();
           reset();
@@ -151,6 +149,10 @@ void Command::processPixel(const uint8_t s) {
     reset();
   }
   processColor(s);
+  Serial.print("processPixel:");
+  Serial.print(paramPos);
+  Serial.print("\n");
+  Serial.flush();
   if (paramPos >= HAS_NUM_SINGLE_COLOR) {
     strip->setPixelColor(numParam, colorParam);
     Serial.print("processPixel:");
@@ -207,7 +209,7 @@ uint8_t Command::hex2uint8(uint8_t val, const uint8_t hex) {
   if      (hex >= '0' && hex <= '9') number = hex - '0';
   else if (hex >= 'a' && hex <= 'f') number = hex - 'a' + 10;
   else if (hex >= 'A' && hex <= 'F') number = hex - 'A' + 10;
-  else    reset();
+
   // shift 4 to make space for new digit, and add the 4 bits of the new digit
   val = (val << 4) | (number & 0xF);
 
