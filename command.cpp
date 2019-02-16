@@ -20,7 +20,7 @@ void Command::Init(const uint8_t s){
       if (commandPos >= INIT_LEN_CHAR) {
         initialized = true;
         strip->updateLength(numParam);
-        Serial.print("numParam ");
+        Serial.print("numParam:");
         Serial.print(numParam, HEX);
         Serial.print('\n');
         Serial.flush();
@@ -103,6 +103,8 @@ uint16_t Command::hex2uint16(uint16_t val, uint8_t hex, uint32_t pos) {
     val = val << 8;
   }
   val = val | (hex2uint8(val, hex) & 0xFF);
+
+  Serial.print('hex2uint16:');
   Serial.print(pos);
   Serial.print(':');
   Serial.print(val, HEX);
@@ -120,6 +122,7 @@ uint8_t Command::hex2uint8(uint8_t val, uint8_t hex) {
   // shift 4 to make space for new digit, and add the 4 bits of the new digit
   val = (val << 4) | (hex & 0xF);
 
+  Serial.print('hex2uint8:');
   Serial.print('h');
   Serial.print(hex);
   Serial.print(':');
