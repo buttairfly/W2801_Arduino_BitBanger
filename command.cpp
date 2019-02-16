@@ -103,8 +103,8 @@ void Command::ProcessCommand(const uint8_t s){
 }
 
 void Command::latch(void) {
-  unsinged long t = millis();
-  if (t - latchTime > LATCH_TIMEOUT) {}
+  unsigned long t = millis();
+  if (t - latchTime > LATCH_TIMEOUT) {
     strip->show();
     Serial.print("Latched\n");
     Serial.flush();
