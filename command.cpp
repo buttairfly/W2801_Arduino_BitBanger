@@ -3,6 +3,7 @@
 Command::Command(Adafruit_WS2801* _strip)
 : strip(_strip){
   initialized = false;
+  latchTime = millis() - LATCH_TIMEOUT;
   reset();
 }
 
@@ -50,10 +51,7 @@ void Command::ProcessCommand(const uint8_t s){
         initCommand(s);
         break;
       case LATCH_FRAME: // latch buffered frame
-        strip->show();
-        Serial.print("Latched\n");
-        Serial.flush();
-        reset();
+        latch();
         break;
       default:
         break;
@@ -104,6 +102,19 @@ void Command::ProcessCommand(const uint8_t s){
   }
 }
 
+void Command::latch(void) {
+  unsinged long t = millis();
+  if (t - latchTime > LATCH_TIMEOUT) {}
+    strip->show();
+    Serial.print("Latched\n");
+    Serial.flush();
+  } else {
+    Serial.print("Latch timeout\n");
+    Serial.flush();
+  }
+  reset();
+}
+
 void Command::reset(void) {
   colorParam = -1;
   numParam = -1;
@@ -134,7 +145,7 @@ void Command::processShade(const uint8_t s) {
     for(uint16_t i = 0; i < numParam; i++) {
       strip->setPixelColor(i, colorParam);
     }
-    strip->show();
+    latch();
     reset();
   }
 }

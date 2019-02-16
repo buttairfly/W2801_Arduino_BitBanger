@@ -9,6 +9,8 @@
 #define HAS_NUM_LEN_CHAR 4
 #define HAS_NUM_SINGLE_COLOR 6
 
+#define LATCH_TIMEOUT 20
+
 #define INIT 'I'
 #define SHADE 'S'
 #define PIXEL 'P'
@@ -22,6 +24,7 @@ class Command {
      void ProcessCommand(const uint8_t c);
      boolean IsInitialized(void);
    private:
+     void latch(void);
      void reset(void);
      void initCommand(const uint8_t s);
 
@@ -44,6 +47,7 @@ class Command {
      uint16_t ledPos;
      uint16_t numParam;
      uint32_t colorParam;
+     unsigned long latchTime;
 
      Adafruit_WS2801 *strip;
 };
