@@ -106,8 +106,6 @@ void Command::latch(void) {
   unsigned long t = millis();
   if (t - latchTime > LATCH_TIMEOUT) {
     strip->show();
-    Serial.print("Latched\n");
-    Serial.flush();
   } else {
     Serial.print("Latch timeout\n");
     Serial.flush();
