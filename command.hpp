@@ -7,11 +7,13 @@
 
 #define INIT_LEN_CHAR 4
 #define HAS_NUM_LEN_CHAR 4
+#define HAS_NUM_SINGLE_COLOR 6
 
 #define INIT 'I'
+#define SHADE 'S'
 #define PIXEL 'P'
-#define FRAME 'F'
-#define SHOW 'S'
+#define RAW_FRAME 'R'
+#define LATCH_FRAME 'L'
 
 class Command {
    public:
@@ -21,19 +23,23 @@ class Command {
      boolean IsInitialized(void);
    private:
      void reset(void);
+     void initCommand(const uint8_t s);
      void processNumParam(const uint8_t c);
+     void processShade(const uint8_t s);
      void processPixel(const uint8_t c);
-     void processFrame(const uint8_t c);
+     void processRawFrame(const uint8_t c);
 
-     uint16_t hex2uint16(uint16_t val, uint8_t hex, uint32_t pos);
-     uint8_t hex2uint8(uint8_t val, uint8_t hex);
+     uint16_t hex2uint16(uint16_t val, const uint8_t hex, const uint8_t pos);
+     uint8_t hex2uint8(uint8_t val, const uint8_t hex);
 
      boolean hasCommand;
      boolean hasNumParam;
      boolean initialized;
      uint8_t command;
-     uint32_t commandPos;
+     uint8_t paramPos;
+     uint16_t ledPos;
      uint16_t numParam;
+     uint32_t colorParam;
 
      Adafruit_WS2801 *strip;
 };

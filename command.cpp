@@ -10,10 +10,7 @@ void Command::Init(const uint8_t s){
   if(!initialized) {
     if (!hasCommand) {
       if (s == INIT) {  // Init input (length = numParam, colors)
-        command = s;
-        hasCommand = true;
-        numParam = 0;
-        commandPos = 0;
+        initCommand(s);
       } else return;
     } else { // hasCommand
       processNumParam(s);
@@ -21,6 +18,11 @@ void Command::Init(const uint8_t s){
         strip->updateLength(numParam);
         if(strip->numPixels() != 0) {
           initialized = true;
+
+          Serial.print("Init ");
+          Serial.print(strip.numPixels(), HEX);
+          Serial.print('\n');
+          Serial.flush();
         } else {
           Serial.print("Init failed\n");
           Serial.flush();
@@ -39,12 +41,12 @@ boolean Command::IsInitialized(void) {
 void Command::ProcessCommand(const uint8_t s){
   if(!hasCommand) {
     switch(s) {
-      case PIXEL: // Colorize pixel (length = numParam, parameter = color)
-      case FRAME: // Frame input (length = numParam, colors)
-        command = s;
-        hasCommand = true;
+      case PIXEL: // Colorize pixel (position = numParam, parameter = color) no latch
+      case SHADE: // Shade first numParam leds (length = numParam, parameter = color) and latch
+      case RAW_FRAME: // Frame input (length = numParam, colors) and latch
+        initCommand(s);
         break;
-      case SHOW: // show buffered frame
+      case LATCH_FRAME: // latch buffered frame
         strip->show();
         reset();
         break;
@@ -53,13 +55,27 @@ void Command::ProcessCommand(const uint8_t s){
   } else { // process command
     if(hasNumParam){
       switch(command) {
+        case SHADE:
+          processShade(s);
+          break;
         case PIXEL:
           processPixel(s);
           break;
-        case FRAME:
-          processFrame(s);
+        case RAW_FRAME:
+          processRawFrame(s);
+          break;
+        case INIT:
+          Serial.print("Already initialized ");
+          Serial.print(strip.numPixels(), HEX);
+          Serial.print('\n');
+          Serial.flush();
+          reset();
           break;
         default:
+          Serial.print("Unknown command:");
+          Serial.print(command);
+          Serial.print("\n");
+          Serial.flush();
           reset();
           break;
       }
@@ -67,49 +83,109 @@ void Command::ProcessCommand(const uint8_t s){
       processNumParam(s);
       if (commandPos >= HAS_NUM_LEN_CHAR) {
         hasNumParam = true;
+        paramPos = 0;
+        if(numParam > strip->numPixels()) {
+          Serial.print("NumParam error:");
+          Serial.print(numParam);
+          Serial.print("\n");
+          Serial.flush();
+          reset();
+        }
       }
     }
   }
 }
 
 void Command::reset(void) {
+  colorParam = -1;
   numParam = -1;
   hasCommand = false;
   hasNumParam = false;
-  commandPos = 0;
+  paramPos = 0;
+  ledPos = 0;
+}
+
+void Command::initCommand(const uint8_t s) {
+  command = s;
+  hasCommand = true;
 }
 
 void Command::processNumParam(const uint8_t s) {
-    numParam = hex2uint16(numParam, s, commandPos);
-    commandPos++;
+    numParam = hex2uint16(numParam, s, paramPos);
+    paramPos++;
+}
+
+void Command::processColor(const uint8_t s) {
+    colorParam = hex2uint16(colorParam, s, paramPos);
+    paramPos++;
+}
+
+void Command::processShade(const uint8_t s) {
+  processColor(s);
+  if (commandPos >= HAS_NUM_SINGLE_COLOR) {
+    for(uint16_t i = 0; i < numParam; i++) {
+      strip->setPixelColor(i, colorParam);
+    }
+    strip.show();
+    reset();
+  }
 }
 
 void Command::processPixel(const uint8_t s) {
-  Serial.print("processPixel\n");
+  // also test error on identity here
+  if(numParam = strip->numPixels()) {
+    Serial.print("NumParam processPixel error:");
+    Serial.print(numParam);
+    Serial.print("\n");
+    Serial.flush();
+    reset();
+  }
+  processColor(s);
+  if (commandPos >= HAS_NUM_SINGLE_COLOR) {
+    strip->setPixelColor(numParam, colorParam);
+    reset();
+  }
 }
 
-void Command::processFrame(const uint8_t s) {
-  Serial.print("processFrame\n");
+void Command::processRawFrame(const uint8_t s) {
+  Serial.print("processRawFrame\n");
 }
 
 /**
- * hex2int
- * take a hex string and convert it to a 8bit number
+ * hex2uint16
+ * take a hex string and convert it to a 16bit number
  */
-uint16_t Command::hex2uint16(uint16_t val, uint8_t hex, uint32_t pos) {
+uint16_t Command::hex2uint16(uint16_t val, const uint8_t hex, const uint32_t pos) {
   if(pos == 0) {
     val = 0;
   }
   if(pos == 2) {
-    val = val << 8;
+    val <<= 8;
   }
 
-  val = val & 0xFF00 | (hex2uint8(val & 0xFF, hex));
+  val = (val & 0xFF00) | (hex2uint8(val & 0xFF, hex));
 
   return val;
 }
 
-uint8_t Command::hex2uint8(uint8_t val, uint8_t hex) {
+/**
+ * hex2color
+ * take a hex string and convert it to a 0xRRGGBB color uint32
+ */
+uint32_t Command::hex2color(uint32_t val, const uint8_t hex, const uint32_t pos) {
+  if(pos == 0) {
+    val = 0;
+  }
+  if(pos == 2 || pos == 4) {
+    val <<= 8;
+  }
+
+  val = (val & 0xFFFF00) | (hex2uint8(val & 0xFF, hex));
+
+  return val;
+}
+
+uint8_t Command::hex2uint8(uint8_t val, const uint8_t hex) {
   // transform hex character to the 4bit equivalent number, using the ascii table indexes
   if (hex >= '0' && hex <= '9') hex = hex - '0';
   else if (hex >= 'a' && hex <='f') hex = hex - 'a' + 10;
@@ -117,5 +193,5 @@ uint8_t Command::hex2uint8(uint8_t val, uint8_t hex) {
   // shift 4 to make space for new digit, and add the 4 bits of the new digit
   val = (val << 4) | (hex & 0xF);
 
-  return val & 0xFF;
+  return val;
 }
