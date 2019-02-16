@@ -23,6 +23,7 @@ void Command::Init(const uint8_t s){
         Serial.print("numParam ");
         Serial.print(numParam, HEX);
         Serial.print('\n');
+        Serial.flush();
         reset();
       }
     }
@@ -106,6 +107,8 @@ uint16_t Command::hex2uint16(uint16_t val, uint8_t hex, uint32_t pos) {
   Serial.print(':');
   Serial.print(val, HEX);
   Serial.print(';');
+  Serial.print('\n');
+  Serial.flush();
   return val;
 }
 
@@ -122,5 +125,7 @@ uint8_t Command::hex2uint8(uint8_t val, uint8_t hex) {
   Serial.print(':');
   Serial.print(val, HEX);
   Serial.print(';h');
+  Serial.print('\n');
+  Serial.flush();
   return val;
 }

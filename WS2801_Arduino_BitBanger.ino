@@ -62,9 +62,10 @@ void setup() {
     initCommand();
   }
 
-  Serial.print("Init leds: (0x");
+  Serial.print("Init leds: 0x");
   Serial.print(strip.numPixels(), HEX);
-  Serial.print(')\n');
+  Serial.print('\n');
+  Serial.flush();
   demo();
 }
 
