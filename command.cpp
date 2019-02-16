@@ -48,6 +48,8 @@ void Command::ProcessCommand(const uint8_t s){
         break;
       case LATCH_FRAME: // latch buffered frame
         strip->show();
+        Serial.print("Latched\n");
+        Serial.flush();
         reset();
         break;
       default: break;
@@ -143,6 +145,12 @@ void Command::processPixel(const uint8_t s) {
   processColor(s);
   if (paramPos >= HAS_NUM_SINGLE_COLOR) {
     strip->setPixelColor(numParam, colorParam);
+    Serial.print("processPixel:");
+    Serial.print(numParam);
+    Serial.print(":");
+    Serial.print(colorParam);
+    Serial.print("\n");
+    Serial.flush();
     reset();
   }
 }
