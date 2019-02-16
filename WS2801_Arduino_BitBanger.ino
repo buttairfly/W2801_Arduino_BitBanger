@@ -43,8 +43,6 @@ const int INITIAL_NUM_LED = 1;
 Adafruit_WS2801 strip = Adafruit_WS2801(INITIAL_NUM_LED);
 Command command = Command(&strip);
 
-
-
 void setup() {
   Serial.begin(1152000);
 
