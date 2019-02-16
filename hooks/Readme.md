@@ -1,5 +1,5 @@
-Add hooks with 
+Add hooks with
 
 ```
-ln -s hooks/pre-push .git/hooks/pre-push
+ln -s $(pwd)/hooks/pre-push $(pwd)/.git/hooks/pre-push
 ```
