@@ -116,7 +116,7 @@ uint16_t Command::hex2uint16(uint16_t val, uint8_t hex, uint32_t pos) {
   Serial.print(":");
   Serial.print(hex2uint8(val, hex) & 0xFF, HEX);
 
-  val = val | (hex2uint8(val, hex) & 0xFF);
+  val = val & 0xFF00 | (hex2uint8(val, hex) & 0x00FF);
 
   Serial.print(":");
   Serial.print(pos);
@@ -126,7 +126,7 @@ uint16_t Command::hex2uint16(uint16_t val, uint8_t hex, uint32_t pos) {
   Serial.print("\n");
   Serial.flush();
 
-  return val & 0xFFFF;
+  return val;
 }
 
 uint8_t Command::hex2uint8(uint8_t val, uint8_t hex) {
