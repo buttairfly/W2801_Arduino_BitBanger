@@ -18,12 +18,13 @@ void Command::Init(const uint8_t s){
     } else { // hasCommand
       processNumParam(s);
       if (commandPos >= INIT_LEN_CHAR) {
-        initialized = true;
         strip->updateLength(numParam);
-        Serial.print("numParam:");
-        Serial.print(numParam, HEX);
-        Serial.print('\n');
-        Serial.flush();
+        if(strip->numPixels() != 0) {
+          initialized = true;
+        } else {
+          Serial.print("Init failed\n");
+          Serial.flush();
+        }
         reset();
       }
     }
@@ -96,12 +97,6 @@ void Command::processFrame(const uint8_t s) {
  * take a hex string and convert it to a 8bit number
  */
 uint16_t Command::hex2uint16(uint16_t val, uint8_t hex, uint32_t pos) {
-
-  Serial.print("hex2uint16:");
-  Serial.print(hex, HEX);
-  Serial.print(":");
-  Serial.print(val, HEX);
-
   if(pos == 0) {
     val = 0;
   }
@@ -109,22 +104,7 @@ uint16_t Command::hex2uint16(uint16_t val, uint8_t hex, uint32_t pos) {
     val = val << 8;
   }
 
-  Serial.print(":");
-  Serial.print(val, HEX);
-
-
-  Serial.print(":");
-  Serial.print(hex2uint8(val, hex) & 0xFF, HEX);
-
-  val = val & 0xFF00 | (hex2uint8(val, hex) & 0x00FF);
-
-  Serial.print(":");
-  Serial.print(pos);
-  Serial.print(":");
-  Serial.print(val, HEX);
-  Serial.print(";");
-  Serial.print("\n");
-  Serial.flush();
+  val = val & 0xFF00 | (hex2uint8(val & 0xFF, hex));
 
   return val;
 }
