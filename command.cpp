@@ -124,7 +124,7 @@ void Command::processNumParam(const uint8_t s) {
 }
 
 void Command::processColor(const uint8_t s) {
-    colorParam = hex2uint16(colorParam, s, paramPos);
+    colorParam = hex2color(colorParam, s, paramPos);
     paramPos++;
 }
 
