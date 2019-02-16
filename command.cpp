@@ -98,10 +98,12 @@ void Command::processFrame(const uint8_t s) {
 uint16_t Command::hex2uint16(uint16_t val, uint8_t hex, uint32_t pos) {
 
   Serial.print("hex2uint16:");
+  Serial.print(hex, HEX);
+  Serial.print(":");
   Serial.print(val, HEX);
 
   if(pos == 0) {
-    val = 0x0000;
+    val = 0;
   }
   if(pos == 2) {
     val = val << 8;
@@ -110,8 +112,9 @@ uint16_t Command::hex2uint16(uint16_t val, uint8_t hex, uint32_t pos) {
   Serial.print(":");
   Serial.print(val, HEX);
 
+
   Serial.print(":");
-  Serial.print(hex, HEX);
+  Serial.print(hex2uint8(val, hex) & 0xFF, HEX);
 
   val = val | (hex2uint8(val, hex) & 0xFF);
 
