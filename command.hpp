@@ -24,11 +24,15 @@ class Command {
    private:
      void reset(void);
      void initCommand(const uint8_t s);
+
      void processNumParam(const uint8_t c);
+     void processColor(const uint8_t s);
+
      void processShade(const uint8_t s);
      void processPixel(const uint8_t c);
      void processRawFrame(const uint8_t c);
 
+     uint32_t hex2color(uint32_t val, const uint8_t hex, const uint8_t pos);
      uint16_t hex2uint16(uint16_t val, const uint8_t hex, const uint8_t pos);
      uint8_t hex2uint8(uint8_t val, const uint8_t hex);
 

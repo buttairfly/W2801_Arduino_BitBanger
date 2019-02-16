@@ -14,13 +14,13 @@ void Command::Init(const uint8_t s){
       } else return;
     } else { // hasCommand
       processNumParam(s);
-      if (commandPos >= INIT_LEN_CHAR) {
+      if (paramPos >= INIT_LEN_CHAR) {
         strip->updateLength(numParam);
         if(strip->numPixels() != 0) {
           initialized = true;
 
           Serial.print("Init ");
-          Serial.print(strip.numPixels(), HEX);
+          Serial.print(strip->numPixels(), HEX);
           Serial.print('\n');
           Serial.flush();
         } else {
@@ -66,7 +66,7 @@ void Command::ProcessCommand(const uint8_t s){
           break;
         case INIT:
           Serial.print("Already initialized ");
-          Serial.print(strip.numPixels(), HEX);
+          Serial.print(strip->numPixels(), HEX);
           Serial.print('\n');
           Serial.flush();
           reset();
@@ -81,7 +81,7 @@ void Command::ProcessCommand(const uint8_t s){
       }
     } else {
       processNumParam(s);
-      if (commandPos >= HAS_NUM_LEN_CHAR) {
+      if (paramPos >= HAS_NUM_LEN_CHAR) {
         hasNumParam = true;
         paramPos = 0;
         if(numParam > strip->numPixels()) {
@@ -122,11 +122,11 @@ void Command::processColor(const uint8_t s) {
 
 void Command::processShade(const uint8_t s) {
   processColor(s);
-  if (commandPos >= HAS_NUM_SINGLE_COLOR) {
+  if (paramPos >= HAS_NUM_SINGLE_COLOR) {
     for(uint16_t i = 0; i < numParam; i++) {
       strip->setPixelColor(i, colorParam);
     }
-    strip.show();
+    strip->show();
     reset();
   }
 }
@@ -141,7 +141,7 @@ void Command::processPixel(const uint8_t s) {
     reset();
   }
   processColor(s);
-  if (commandPos >= HAS_NUM_SINGLE_COLOR) {
+  if (paramPos >= HAS_NUM_SINGLE_COLOR) {
     strip->setPixelColor(numParam, colorParam);
     reset();
   }
@@ -155,7 +155,7 @@ void Command::processRawFrame(const uint8_t s) {
  * hex2uint16
  * take a hex string and convert it to a 16bit number
  */
-uint16_t Command::hex2uint16(uint16_t val, const uint8_t hex, const uint32_t pos) {
+uint16_t Command::hex2uint16(uint16_t val, const uint8_t hex, const uint8_t pos) {
   if(pos == 0) {
     val = 0;
   }
@@ -172,7 +172,7 @@ uint16_t Command::hex2uint16(uint16_t val, const uint8_t hex, const uint32_t pos
  * hex2color
  * take a hex string and convert it to a 0xRRGGBB color uint32
  */
-uint32_t Command::hex2color(uint32_t val, const uint8_t hex, const uint32_t pos) {
+uint32_t Command::hex2color(uint32_t val, const uint8_t hex, const uint8_t pos) {
   if(pos == 0) {
     val = 0;
   }
@@ -186,12 +186,13 @@ uint32_t Command::hex2color(uint32_t val, const uint8_t hex, const uint32_t pos)
 }
 
 uint8_t Command::hex2uint8(uint8_t val, const uint8_t hex) {
+  uint8_t number = 0;
   // transform hex character to the 4bit equivalent number, using the ascii table indexes
-  if (hex >= '0' && hex <= '9') hex = hex - '0';
-  else if (hex >= 'a' && hex <='f') hex = hex - 'a' + 10;
-  else if (hex >= 'A' && hex <='F') hex = hex - 'A' + 10;
+  if      (hex >= '0' && hex <= '9') number = hex - '0';
+  else if (hex >= 'a' && hex <= 'f') number = hex - 'a' + 10;
+  else if (hex >= 'A' && hex <= 'F') number = hex - 'A' + 10;
   // shift 4 to make space for new digit, and add the 4 bits of the new digit
-  val = (val << 4) | (hex & 0xF);
+  val = (val << 4) | (number & 0xF);
 
   return val;
 }
