@@ -110,6 +110,9 @@ uint16_t Command::hex2uint16(uint16_t val, uint8_t hex, uint32_t pos) {
   Serial.print(":");
   Serial.print(val, HEX);
 
+  Serial.print(":");
+  Serial.print(hex, HEX);
+
   val = val | (hex2uint8(val, hex) & 0xFF);
 
   Serial.print(":");
