@@ -9,7 +9,7 @@
 #define HAS_NUM_LEN_CHAR 4
 #define HAS_NUM_SINGLE_COLOR 6
 
-#define LATCH_TIMEOUT 20
+#define LATCH_TIMEOUT 5
 
 #define INIT 'I'
 #define SHADE 'S'
