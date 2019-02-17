@@ -152,25 +152,15 @@ void Command::processShade(const uint8_t s) {
 void Command::processPixel(const uint8_t s) {
   // also test error on identity here
   if(numParam = strip->numPixels()) {
-    Serial.print("NumParam processPixel error:");
+    Serial.print("enp=:"); // error num param equals
     Serial.print(numParam);
     Serial.print("\n");
     Serial.flush();
     reset();
   }
   processColor(s);
-  Serial.print("processPixel:");
-  Serial.print(paramPos);
-  Serial.print("\n");
-  Serial.flush();
   if (paramPos >= HAS_NUM_SINGLE_COLOR) {
     strip->setPixelColor(numParam, colorParam);
-    Serial.print("processPixel:");
-    Serial.print(numParam);
-    Serial.print(":");
-    Serial.print(colorParam);
-    Serial.print("\n");
-    Serial.flush();
     reset();
   }
 }
