@@ -110,9 +110,9 @@ void Command::ProcessCommand(const uint8_t s){
 
 void Command::printVersion(void) {
     Serial.print(BUILD_PROGRAM);
-    Serial.print(": compiled at ");
+    Serial.print(": ");
     Serial.print(BUILD_DATE);
-    Serial.print(" with version ");
+    Serial.print(" ");
     Serial.print(BUILD_VERSION);
     Serial.print("\n");
     Serial.flush();
