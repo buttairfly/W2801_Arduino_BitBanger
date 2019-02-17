@@ -69,7 +69,6 @@ void initCommand(void) {
   while(Serial.available() && !command.IsInitialized()) {
     const uint8_t s = Serial.read();// read the incoming char
     Serial.print(char(s)); // rewrite char
-    Serial.print(" \n");
     Serial.flush();
     command.Init(s);
   }
