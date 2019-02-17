@@ -6,7 +6,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 git pull
 
-source version.sh
+source ${DIR}/version.sh
 
 sudo arduino-cli compile \
   --fqbn arduino:avr:nano \
