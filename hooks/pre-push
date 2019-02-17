@@ -3,8 +3,9 @@
 set -e
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-
 ROOT_DIR="$( dirname $( dirname "${DIR}" ) )"
+
+source ${ROOT_DIR}/version.sh
 
 arduino-cli compile \
   --fqbn arduino:avr:nano \

@@ -1,4 +1,4 @@
-// railsensor.hpp
+// command.hpp
 #ifndef COMMAND_HPP
 #define COMMAND_HPP
 
