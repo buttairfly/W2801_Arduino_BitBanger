@@ -47,6 +47,14 @@ Command command = Command(&strip);
 void setup() {
   Serial.begin(1152000);
 
+  Serial.print(BUILD_PROGRAM);
+  Serial.print(": compiled at ");
+  Serial.print(BUILD_DATE);
+  Serial.print(" with version ");
+  Serial.print(BUILD_VERSION);
+  Serial.print("\n");
+  Serial.flush();
+
   strip.begin();
   strip.show();
   const unsigned long WAIT_TIME_MS = 10;
