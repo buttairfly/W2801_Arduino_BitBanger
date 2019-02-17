@@ -37,7 +37,7 @@ void Command::ProcessCommand(const uint8_t s) {
         return;
     }
   } else { // process command
-    if (charType != TYPE_HEX || charType != TYPE_RETURN) {
+    if (charType != TYPE_HEX && charType != TYPE_RETURN) {
       Serial.print("eul:"); // error unknown letter
       Serial.print(s, HEX);
       Serial.print("\n");
