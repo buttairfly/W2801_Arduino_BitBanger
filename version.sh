@@ -13,9 +13,9 @@ echo "// version.hpp
 #ifndef VERSION_HPP
 #define VERSION_HPP
 
-#define BUILD_DATE    ${DATE}
-#define BUILD_VERSION ${VERSION}
-#define BUILD_PROGRAM ${BINARY}
+#define BUILD_DATE    \"${DATE}\"
+#define BUILD_VERSION \"${VERSION}\"
+#define BUILD_PROGRAM \"${BINARY}\"
 
 #endif
 " > ${DIR}/version.hpp
