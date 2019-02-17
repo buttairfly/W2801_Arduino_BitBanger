@@ -46,6 +46,28 @@ Command command = Command(&strip);
 void setup() {
   Serial.begin(1152000);
 
+  Serial.print(10);
+  delay(1000);
+  Serial.print(9);
+  delay(1000);
+  Serial.print(8);
+  delay(1000);
+  Serial.print(7);
+  delay(1000);
+  Serial.print(6);
+  delay(1000);
+  Serial.print(5);
+  delay(1000);
+  Serial.print(4);
+  delay(1000);
+  Serial.print(3);
+  delay(1000);
+  Serial.print(2);
+  delay(1000);
+  Serial.print(1);
+  delay(1000);
+  Serial.print("\nHELLO ARDUINO\n");
+
   strip.begin();
   strip.show();
   const unsigned long WAIT_TIME_MS = 10;
@@ -77,6 +99,8 @@ void initCommand(void) {
 void processCommand(void) {
   while(Serial.available()) {
     const uint8_t s = Serial.read();// read the incoming char
+    Serial.print(char(s)); // rewrite char
+    Serial.flush();
     command.ProcessCommand(s);
   }
 }
