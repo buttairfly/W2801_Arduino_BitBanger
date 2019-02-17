@@ -69,15 +69,15 @@ void Command::ProcessCommand(const uint8_t s){
           processRawFrame(s);
           break;
         case INIT:
-          Serial.print("Already initialized ");
+          Serial.print("Init done ");
           Serial.print(strip->numPixels(), HEX);
           Serial.print('\n');
           Serial.flush();
           reset();
           break;
         default:
-          Serial.print("Unknown command:");
-          Serial.print(command);
+          Serial.print("euc:"); // error unknown command
+          Serial.print(command, HEX);
           Serial.print("\n");
           Serial.flush();
           reset();
@@ -89,10 +89,10 @@ void Command::ProcessCommand(const uint8_t s){
         hasNumParam = true;
         paramPos = 0;
         if(numParam > strip->numPixels()) {
-          Serial.print("NumParam error:");
-          Serial.print(numParam);
-          Serial.print(",command:");
-          Serial.print(command);
+          Serial.print("enp:"); // error num param
+          Serial.print(numParam, HEX);
+          Serial.print(",c:"); // command
+          Serial.print(command, HEX);
           Serial.print("\n");
           Serial.flush();
           reset();
@@ -108,15 +108,15 @@ void Command::latch(void) {
     strip->show();
     latchTime = now;
   } else {
-    Serial.print("Latch timeout\n");
+    Serial.print("elt\n"); // error latch timeout
     Serial.flush();
   }
   reset();
 }
 
 void Command::reset(void) {
-  colorParam = -1;
-  numParam = -1;
+  colorParam = 0;
+  numParam = 0;
   hasCommand = false;
   hasNumParam = false;
   paramPos = 0;
