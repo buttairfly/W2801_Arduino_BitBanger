@@ -9,7 +9,9 @@ VERSION=`git describe --always --dirty`
 DATE=`date -u +%FT%T%z`
 echo "${BINARY}: compiled at ${DATE} with version ${VERSION}"
 
-echo "// version.hpp
+echo "// THIS FILE IS AUTO-GENERATED - DO NOT EDIT MANUALLY
+
+// version.hpp
 #ifndef VERSION_HPP
 #define VERSION_HPP
 

@@ -4,6 +4,7 @@
 
 #include "Arduino.h"
 #include <Adafruit_WS2801.h>
+#include "version.hpp"
 
 #define INIT_LEN_CHAR 4
 #define HAS_NUM_LEN_CHAR 4
@@ -11,6 +12,7 @@
 
 #define LATCH_TIMEOUT 10
 
+#define VERSION 'V'
 #define INIT 'I'
 #define SHADE 'S'
 #define PIXEL 'P'
@@ -24,6 +26,7 @@ class Command {
      void ProcessCommand(const uint8_t c);
      boolean IsInitialized(void);
    private:
+     void printVersion(void);
      void latch(void);
      void reset(void);
      void initCommand(const uint8_t s);

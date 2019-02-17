@@ -1,7 +1,6 @@
 #include <Adafruit_WS2801.h>
 #include "SPI.h" // Comment out this line if using Trinket or Gemma
 #include "command.hpp"
-#include "version.hpp"
 
 /*****************************************************************************
   Example sketch for driving Adafruit WS2801 pixels!
@@ -46,14 +45,6 @@ Command command = Command(&strip);
 
 void setup() {
   Serial.begin(1152000);
-
-  Serial.print(BUILD_PROGRAM);
-  Serial.print(": compiled at ");
-  Serial.print(BUILD_DATE);
-  Serial.print(" with version ");
-  Serial.print(BUILD_VERSION);
-  Serial.print("\n");
-  Serial.flush();
 
   strip.begin();
   strip.show();

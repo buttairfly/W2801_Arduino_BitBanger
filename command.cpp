@@ -12,6 +12,8 @@ void Command::Init(const uint8_t s){
     if (!hasCommand) {
       if (s == INIT) {  // Init input (length = numParam, colors)
         initCommand(s);
+      } else if (s == VERSION) {
+        printVersion();
       } else return;
     } else { // hasCommand
       processNumParam(s);
@@ -53,6 +55,9 @@ void Command::ProcessCommand(const uint8_t s){
       case LATCH_FRAME: // latch buffered frame
         latch();
         break;
+      case VERSION: // print version
+          printVersion();
+          break;
       default:
         reset();
         break;
@@ -101,6 +106,18 @@ void Command::ProcessCommand(const uint8_t s){
       }
     }
   }
+}
+
+void Command::printVersion(void) {
+    Serial.print(BUILD_PROGRAM);
+    Serial.print(": compiled at ");
+    Serial.print(BUILD_DATE);
+    Serial.print(" with version ");
+    Serial.print(BUILD_VERSION);
+    Serial.print("\n");
+    Serial.flush();
+
+    reset();
 }
 
 void Command::latch(void) {
