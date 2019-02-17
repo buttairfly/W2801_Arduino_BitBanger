@@ -54,6 +54,7 @@ void Command::ProcessCommand(const uint8_t s){
         latch();
         break;
       default:
+        reset();
         break;
     }
   } else { // process command
@@ -151,7 +152,7 @@ void Command::processShade(const uint8_t s) {
 
 void Command::processPixel(const uint8_t s) {
   // also test error on identity here
-  if(numParam = strip->numPixels()) {
+  if(numParam == strip->numPixels()) {
     Serial.print("enp=:"); // error num param equals
     Serial.print(numParam);
     Serial.print("\n");
