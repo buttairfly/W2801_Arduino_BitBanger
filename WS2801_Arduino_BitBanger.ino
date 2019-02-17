@@ -68,6 +68,7 @@ void loop() {
 void initCommand(void) {
   while(Serial.available() && !command.IsInitialized()) {
     const uint8_t s = Serial.read();// read the incoming char
+    Serial.print(s); // rewrite char
     command.Init(s);
   }
 }
