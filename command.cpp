@@ -122,18 +122,19 @@ void Command::init(const uint8_t s) {
     if(strip->numPixels() != 0) {
       Serial.print("Init ");
       Serial.print(strip->numPixels(), HEX);
-      if (numParam != strip->numPixels()) {
-        Serial.print(" could not set ");
-        Serial.print(numParam, HEX);
-      }
+      Serial.print(" should be ");
+      Serial.print(numParam, HEX);
       Serial.print('\n');
       Serial.flush();
-      initialized = true;
+      if(numParam == strip->numPixels()) {
+        initialized = true;
+      }
+      reset();
     } else {
       Serial.print("Init failed\n");
       Serial.flush();
+      reset();
     }
-    reset();
   }
 }
 
