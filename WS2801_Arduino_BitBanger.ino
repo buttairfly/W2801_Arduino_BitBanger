@@ -51,6 +51,9 @@ void setup() {
   const unsigned long WAIT_TIME_MS = 10;
   unsigned long lastTime = 0;
   unsigned long time;
+
+  delay(3000); // wait for serial to setup
+  
   while(!command.IsInitialized()) {
     time = millis();
     if(time - lastTime > WAIT_TIME_MS){

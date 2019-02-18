@@ -118,9 +118,7 @@ void Command::printVersion(const uint8_t s) {
 
 void Command::init(const uint8_t s) {
   if (isReturnCharType(s)) {
-    if(!initialized) {
-      strip->updateLength(numParam);
-    }
+    strip->updateLength(numParam);
     if(strip->numPixels() != 0) {
       Serial.print("Init ");
       Serial.print(strip->numPixels(), HEX);
