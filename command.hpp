@@ -32,7 +32,7 @@ class Command {
 
    private:
      void     reset(void);
-     void     printErrorAndReset(const char* errorCode, const uint8_t inChar, const uint32 param = 0xFFFFFFFF);
+     void     printErrorAndReset(const char* errorCode, const uint8_t inChar, const uint32_t param = 0xFFFFFFFF);
      void     printVersion(const uint8_t s);
      void     init(const uint8_t s);
      void     latch(const uint8_t s);
@@ -52,7 +52,7 @@ class Command {
 
      uint8_t  getHexVal(const uint8_t hex);
      void     setCharType(const uint8_t s);
-     boolean  isReturnCharType(void);
+     boolean  isReturnCharType(const uint8_t s);
 
      boolean         hasCommand;
      boolean         hasNumParam;

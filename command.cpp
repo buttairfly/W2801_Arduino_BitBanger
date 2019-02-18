@@ -50,13 +50,13 @@ void Command::ProcessCommand(const uint8_t s) {
           processRawFrame(s);
           return;
         case INIT:
-          init();
+          init(s);
           return;
         case LATCH_FRAME:
-          latch();
+          latch(s);
           return;
         case VERSION:
-          printVersion();
+          printVersion(s);
           return;
         default:
           printErrorAndReset("eucmd", s, command); // error unknown command
@@ -80,7 +80,7 @@ void Command::ProcessCommand(const uint8_t s) {
   }
 }
 
-void printErrorAndReset(const char* errorCode, const uint8_t s, const uint32 param = 0xFFFFFFFF) {
+void Command::printErrorAndReset(const char* errorCode, const uint8_t s, const uint32_t param = 0xFFFFFFFF) {
   Serial.print("\n"); // initial new line to highlight error
   Serial.print(errorCode);
   Serial.print(":");
@@ -106,9 +106,9 @@ boolean Command::isReturnCharType(const uint8_t s) {
 void Command::printVersion(const uint8_t s) {
   if (isReturnCharType(s)) {
     Serial.print(BUILD_PROGRAM);
-    Serial.print(": ");ucd
+    Serial.print(": ");
     Serial.print(BUILD_DATE);
-    Serial.print(" ");
+    Serial.print(" - ");
     Serial.print(BUILD_VERSION);
     Serial.print("\n");
     Serial.flush();
@@ -203,7 +203,7 @@ void Command::processShade(const uint8_t s) {
       for(uint16_t i = 0; i < numParam; i++) {
         strip->setPixelColor(i, colorParam);
       }
-      latch();
+      latch(s);
       reset();
     } else {
       printErrorAndReset("enebs", s); // error not enough bits color param
