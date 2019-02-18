@@ -118,17 +118,20 @@ void Command::printVersion(const uint8_t s) {
 
 void Command::init(const uint8_t s) {
   if (isReturnCharType(s)) {
-    strip->updateLength(numParam);
+    if (!initialized) {
+      strip->updateLength(numParam);
+    }
     if(strip->numPixels() != 0) {
       Serial.print("Init ");
       Serial.print(strip->numPixels(), HEX);
-      Serial.print(" should be ");
-      Serial.print(numParam, HEX);
-      Serial.print('\n');
-      Serial.flush();
       if(numParam == strip->numPixels()) {
         initialized = true;
+      } else {
+        Serial.print(" should be ");
+        Serial.print(numParam, HEX);
       }
+      Serial.print('\n');
+      Serial.flush();
       reset();
     } else {
       Serial.print("Init failed\n");
@@ -281,8 +284,8 @@ uint8_t Command::hex2uint8(uint8_t val, const uint8_t hex) {
 uint8_t Command::getHexVal(const uint8_t hex) {
   // transform hex character to the 4bit equivalent number, using the ascii table indexes
   if      (hex >= '0' && hex <= '9') return hex - '0';
-  else if (hex >= 'a' && hex <= 'f') return - 'a' + 10;
-  else if (hex >= 'A' && hex <= 'F') return - 'A' + 10;
+  else if (hex >= 'a' && hex <= 'f') return hex - 'a' + 10;
+  else if (hex >= 'A' && hex <= 'F') return hex - 'A' + 10;
   return  TYPE_UNKNOWN;
 }
 
