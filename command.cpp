@@ -13,7 +13,7 @@ boolean Command::IsInitialized(void) {
 }
 
 void Command::ProcessCommand(const uint8_t s) {
-  if(quietMode) {
+  if(!quietMode) {
     Serial.print(s);
     Serial.flush();
   }
@@ -90,7 +90,7 @@ void Command::ProcessCommand(const uint8_t s) {
 }
 
 void Command::printErrorAndReset(const char* errorCode, const uint8_t s, const uint32_t param = 0xFFFFFFFF) {
-  if(quietMode) {
+  if(!quietMode) {
     Serial.print("\n"); // initial new line to highlight error
   }
   Serial.print(errorCode);
