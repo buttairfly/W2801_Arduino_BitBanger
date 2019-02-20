@@ -53,7 +53,7 @@ void setup() {
   unsigned long time;
 
   delay(3000); // wait for serial to setup
-  
+
   while(!command.IsInitialized()) {
     time = millis();
     if(time - lastTime > WAIT_TIME_MS){
@@ -82,8 +82,6 @@ void processCommand(void) {
 
 void readChar(void) {
   const uint8_t s = Serial.read();// read the incoming char
-  Serial.print(char(s)); // rewrite char
-  Serial.flush();
   command.ProcessCommand(s);
 }
 

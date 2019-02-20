@@ -23,6 +23,7 @@
 #define PIXEL         'P'
 #define RAW_FRAME     'R'
 #define LATCH_FRAME   'L'
+#define QUIET_MODE    'Q'
 
 class Command {
    public:
@@ -37,7 +38,7 @@ class Command {
      void     init(const uint8_t s);
      void     latch(const uint8_t s);
      void     initCommand(const uint8_t s);
-     uint8_t  getCharType(const uint8_t s);
+     void     quiet(const uint8_t s);
 
      void     processNumParam(const uint8_t c);
      void     processColor(const uint8_t s);
@@ -50,6 +51,7 @@ class Command {
      uint16_t hex2uint16(uint16_t val, const uint8_t hex, const uint8_t pos);
      uint8_t  hex2uint8(uint8_t val, const uint8_t hex);
 
+     uint8_t  getCharType(const uint8_t s);
      uint8_t  getHexVal(const uint8_t hex);
      void     setCharType(const uint8_t s);
      boolean  isReturnCharType(const uint8_t s);
@@ -57,6 +59,7 @@ class Command {
      boolean         hasCommand;
      boolean         hasNumParam;
      boolean         initialized;
+     boolean         quietMode;
      uint8_t         charType;
      uint8_t         command;
      uint8_t         paramPos;

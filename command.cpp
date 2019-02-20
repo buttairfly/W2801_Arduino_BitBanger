@@ -3,6 +3,7 @@
 Command::Command(Adafruit_WS2801* _strip)
 : strip(_strip){
   initialized = false;
+  quietMode = true;
   latchTime = millis() - LATCH_TIMEOUT;
   reset();
 }
@@ -12,6 +13,10 @@ boolean Command::IsInitialized(void) {
 }
 
 void Command::ProcessCommand(const uint8_t s) {
+  if(quietMode) {
+    Serial.print(s);
+    Serial.flush();
+  }
   setCharType(s);
   if(!hasCommand) {
     if(charType != TYPE_COMMAND) {
@@ -22,6 +27,7 @@ void Command::ProcessCommand(const uint8_t s) {
       case VERSION: // print version
       case LATCH_FRAME: // latch buffered frame
         hasNumParam = true; // version and latchFrame do not have numParam
+      case QUIET_MODE: // enables or disables return of received parameters
       case INIT: // Show number of initialized leds
       case PIXEL: // Colorize pixel (position = numParam, parameter = color) no latch
       case SHADE: // Shade first numParam leds (length = numParam, parameter = color) and latch
@@ -48,6 +54,9 @@ void Command::ProcessCommand(const uint8_t s) {
           return;
         case RAW_FRAME:
           processRawFrame(s);
+          return;
+        case QUIET_MODE:
+          quiet(s);
           return;
         case INIT:
           init(s);
@@ -81,7 +90,9 @@ void Command::ProcessCommand(const uint8_t s) {
 }
 
 void Command::printErrorAndReset(const char* errorCode, const uint8_t s, const uint32_t param = 0xFFFFFFFF) {
-  Serial.print("\n"); // initial new line to highlight error
+  if(quietMode) {
+    Serial.print("\n"); // initial new line to highlight error
+  }
   Serial.print(errorCode);
   Serial.print(":");
   if(param != 0xFFFFFFFF) {
@@ -138,6 +149,12 @@ void Command::init(const uint8_t s) {
       Serial.flush();
       reset();
     }
+  }
+}
+
+void Command::quiet(const uint8_t s) {
+  if (isReturnCharType(s)) {
+    numParam != 0 ? quietMode = true : quietMode = false;
   }
 }
 
@@ -291,6 +308,7 @@ uint8_t Command::getHexVal(const uint8_t hex) {
 
 void Command::setCharType(const uint8_t s) {
   switch(s) {
+    case QUIET_MODE:  // enables or disables return of received parameters
     case INIT:        // init length of ws2801 strip
     case PIXEL:       // Colorize pixel (position = numParam, parameter = color) no latch
     case SHADE:       // Shade first numParam leds (length = numParam, parameter = color) and latch
@@ -298,10 +316,10 @@ void Command::setCharType(const uint8_t s) {
     case LATCH_FRAME: // latch buffered frame
     case VERSION:     // print version
       charType = TYPE_COMMAND;
-      break;
+      return;
     case '\n':
       charType = TYPE_RETURN;
-      break;
+      return;
     default:
       if (getHexVal(s) != TYPE_UNKNOWN) {
         charType = TYPE_HEX;
