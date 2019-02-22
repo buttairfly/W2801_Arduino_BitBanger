@@ -40,7 +40,7 @@ void Command::ProcessCommand(const uint8_t s) {
     }
   } else { // process command
     if (charType != TYPE_HEX && charType != TYPE_RETURN) {
-      printErrorAndReset("eulet", s); // error unknown letter
+      printErrorAndReset("eulet", s, charType); // error unknown letter
       ProcessCommand(s); //maybe it is a new command starting
       return;
     }
