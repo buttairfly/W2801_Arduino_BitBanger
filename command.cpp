@@ -222,7 +222,6 @@ void Command::processShade(const uint8_t s) {
       for(uint16_t i = 0; i < numParam; i++) {
         strip->setPixelColor(i, colorParam);
       }
-      latch(s);
       reset();
     } else {
       printErrorAndReset("enebs", s); // error not enough bits color param
