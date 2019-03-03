@@ -80,7 +80,7 @@ void Command::ProcessCommand(const uint8_t s) {
       if (paramPos >= NUM_PARAM_CHARS) {
         hasNumParam = true;
         paramPos = 0;
-        if(initialized && numParam > strip->numPixels()) {
+        if(initialized && command != QUIET_MODE && numParam > strip->numPixels()) {
           printErrorAndReset("enpov", s, numParam); // error num param overflow
           return;
         }
