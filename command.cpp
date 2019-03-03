@@ -14,7 +14,7 @@ boolean Command::IsInitialized(void) {
 
 void Command::ProcessCommand(const uint8_t s) {
   if(!quietMode) {
-    Serial.print(s);
+    Serial.write(s);
     Serial.flush();
   }
   setCharType(s);
