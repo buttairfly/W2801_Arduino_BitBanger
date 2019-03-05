@@ -35,7 +35,7 @@ void Command::ProcessCommand(const uint8_t s) {
         initCommand(s);
         return;
       default:
-        printErrorAndReset("Endcm", s); // error unknown command defined
+        printErrorAndReset("Endcm", s); // error not defined command
         return;
     }
   } else { // process command
@@ -94,13 +94,16 @@ void Command::printErrorAndReset(const char* errorCode, const uint8_t s, const u
     Serial.print("\n"); // initial new line to highlight error
   }
   Serial.print(errorCode);
-  Serial.print(":");
+  Serial.print(",");
   if(param != 0xFFFFFFFF) {
-    Serial.print(param, HEX);
+    Serial.print("p");
+    Serial.write(param);
     Serial.print(",");
   }
-  Serial.print("s");
-  Serial.print(s, HEX);
+  if(s != 0x0) {
+    Serial.print("s");
+    Serial.write(s);
+  }
   Serial.print("\n");
   Serial.flush();
   reset();
@@ -145,9 +148,7 @@ void Command::init(const uint8_t s) {
       Serial.flush();
       reset();
     } else {
-      Serial.print("Init failed\n");
-      Serial.flush();
-      reset();
+      printErrorAndReset("Euini", 0x0); // error upadate initialisation impossible
     }
   }
 }
@@ -166,7 +167,7 @@ void Command::latch(const uint8_t s) {
       latchTime = now;
       reset();
     } else {
-      printErrorAndReset("Elati", 0x0); // error latch timeout
+      printErrorAndReset("Elati", 0x0, LATCH_TIMEOUT); // error latch timeout
     }
   }
 }
@@ -219,7 +220,7 @@ void Command::processShade(const uint8_t s) {
       }
       reset();
     } else {
-      printErrorAndReset("Enebs", s); // error not enough bits color param
+      printErrorAndReset("Enebs", s, paramPos); // error not enough bytes color param
       return;
     }
     return;
@@ -233,14 +234,14 @@ void Command::processPixel(const uint8_t s) {
       strip->setPixelColor(numParam, colorParam);
       reset();
     } else {
-      printErrorAndReset("Enebp", s); // error not enough bits color param
+      printErrorAndReset("Enebp", s, paramPos); // error not enough bits color param
       return;
     }
     return;
   }
   // also test error on identity here
   if(numParam == strip->numPixels()) {
-    printErrorAndReset("Enpeq", s, numParam);
+    printErrorAndReset("Enpeq", s, numParam); // num param overflow, euqals number of pixel
     return;
   }
   processColor(s);
