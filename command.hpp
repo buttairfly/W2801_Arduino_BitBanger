@@ -5,6 +5,7 @@
 #include "Arduino.h"
 #include <Adafruit_WS2801.h>
 #include "version.hpp"
+#include "device.serial.arduino.error.hpp"
 
 #define NUM_PARAM_CHARS      4
 #define HAS_NUM_SINGLE_COLOR 6
@@ -33,7 +34,7 @@ class Command {
 
    private:
      void     reset(void);
-     void     printErrorAndReset(const char* errorCode, const uint8_t inChar, const uint32_t param = 0xFFFFFFFF);
+     void     printErrorAndReset(const String errorCode, const uint8_t inChar, const uint32_t param = 0xFFFFFFFF);
      void     printVersion(const uint8_t s);
      void     init(const uint8_t s);
      void     latch(const uint8_t s);

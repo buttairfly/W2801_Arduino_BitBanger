@@ -20,7 +20,7 @@ void Command::ProcessCommand(const uint8_t s) {
   setCharType(s);
   if(!hasCommand) {
     if(charType != TYPE_COMMAND) {
-      printErrorAndReset("Encmd", s); // error no command
+      printErrorAndReset(ErrorNoCommand, s);
       return;
     }
     switch(s) {
@@ -35,12 +35,12 @@ void Command::ProcessCommand(const uint8_t s) {
         initCommand(s);
         return;
       default:
-        printErrorAndReset("Endcm", s); // error not defined command
+        printErrorAndReset(ErrorNotDefinedCommand, s);
         return;
     }
   } else { // process command
     if (charType != TYPE_HEX && charType != TYPE_RETURN) {
-      printErrorAndReset("Eulet", s, charType); // error unknown letter
+      printErrorAndReset(ErrorUnknownLetter, s, charType);
       ProcessCommand(s); //maybe it is a new command starting
       return;
     }
@@ -68,12 +68,12 @@ void Command::ProcessCommand(const uint8_t s) {
           printVersion(s);
           return;
         default:
-          printErrorAndReset("Eucmd", s, command); // error unknown command
+          printErrorAndReset(ErrorUnknownCommand, s, command);
           return;
       }
     } else {
       if (charType == TYPE_RETURN) {
-        printErrorAndReset("Euret", s); // error unknown return
+        printErrorAndReset(ErrorUnknownReturn, s);
         return;
       }
       processNumParam(s);
@@ -81,7 +81,7 @@ void Command::ProcessCommand(const uint8_t s) {
         hasNumParam = true;
         paramPos = 0;
         if(initialized && command != QUIET_MODE && numParam > strip->numPixels()) {
-          printErrorAndReset("Enpov", s, numParam); // error num param overflow
+          printErrorAndReset(ErrorNumberParameterOverflow, s, numParam);
           return;
         }
       }
@@ -89,7 +89,7 @@ void Command::ProcessCommand(const uint8_t s) {
   }
 }
 
-void Command::printErrorAndReset(const char* errorCode, const uint8_t s, const uint32_t param = 0xFFFFFFFF) {
+void Command::printErrorAndReset(const String errorCode, const uint8_t s, const uint32_t param = 0xFFFFFFFF) {
   if(!quietMode) {
     Serial.print("\n"); // initial new line to highlight error
   }
@@ -111,7 +111,7 @@ void Command::printErrorAndReset(const char* errorCode, const uint8_t s, const u
 
 boolean Command::isReturnCharType(const uint8_t s) {
   if (charType != TYPE_RETURN) {
-    printErrorAndReset("Enret", s); // error no return
+    printErrorAndReset(ErrorNoReturn, s); // error no return
     return false;
   }
   return true;
@@ -148,7 +148,7 @@ void Command::init(const uint8_t s) {
       Serial.flush();
       reset();
     } else {
-      printErrorAndReset("Euini", 0x0); // error upadate initialisation impossible
+      printErrorAndReset(ErrorNoInitialisationPossible, 0x0);
     }
   }
 }
@@ -167,7 +167,7 @@ void Command::latch(const uint8_t s) {
       latchTime = now;
       reset();
     } else {
-      printErrorAndReset("Elati", 0x0, LATCH_TIMEOUT); // error latch timeout
+      printErrorAndReset(ErrorLatchTimeout, 0x0, LATCH_TIMEOUT);
     }
   }
 }
@@ -187,7 +187,7 @@ void Command::initCommand(const uint8_t s) {
     command = s;
     hasCommand = true;
   } else {
-    printErrorAndReset("Enini", s); // error not initialized
+    printErrorAndReset(ErrorNotInitialized, s);
   }
 }
 
@@ -196,7 +196,7 @@ void Command::processNumParam(const uint8_t s) {
     numParam = hex2uint16(numParam, s, paramPos);
     paramPos++;
   } else {
-    printErrorAndReset("Enhxn", s); // error not hex num param
+    printErrorAndReset(ErrorNotHexNumberParameter, s);
     return;
   }
 }
@@ -207,7 +207,7 @@ void Command::processColor(const uint8_t s) {
     paramPos++;
     return;
   } else {
-    printErrorAndReset("Enhxc", s); // error not hex color param
+    printErrorAndReset(ErrorNotHexColorParameter, s);
     return;
   }
 }
@@ -220,7 +220,7 @@ void Command::processShade(const uint8_t s) {
       }
       reset();
     } else {
-      printErrorAndReset("Enebs", s, paramPos); // error not enough bytes color param
+      printErrorAndReset(ErrorNotEnoughBytesColorParam, s, paramPos);
       return;
     }
     return;
@@ -234,14 +234,14 @@ void Command::processPixel(const uint8_t s) {
       strip->setPixelColor(numParam, colorParam);
       reset();
     } else {
-      printErrorAndReset("Enebp", s, paramPos); // error not enough bits color param
+      printErrorAndReset(ErrorNotEnoughBytesColorParam, s, paramPos);
       return;
     }
     return;
   }
   // also test error on identity here
   if(numParam == strip->numPixels()) {
-    printErrorAndReset("Enpeq", s, numParam); // num param overflow, euqals number of pixel
+    printErrorAndReset(ErrorNumberParameterOverflowEqualsNumLeds, s, numParam);
     return;
   }
   processColor(s);

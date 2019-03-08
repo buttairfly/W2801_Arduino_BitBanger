@@ -26,5 +26,4 @@ echo "// THIS FILE IS AUTO-GENERATED - DO NOT EDIT MANUALLY
 #define BUILD_VERSION \"${VERSION}\"
 #define BUILD_PROGRAM \"${BINARY}\"
 
-#endif
-" > ${DIR}/version.hpp
+#endif" > ${DIR}/version.hpp
