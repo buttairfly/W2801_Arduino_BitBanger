@@ -12,11 +12,11 @@
 
 #define LATCH_TIMEOUT  10
 
-#define TYPE_UNDEFINED 0x00
-#define TYPE_COMMAND   0x01
-#define TYPE_HEX       0x02
-#define TYPE_RETURN    0x03
-#define TYPE_UNKNOWN   0xFF
+#define TYPE_UNDEFINED 'D'
+#define TYPE_COMMAND   'C'
+#define TYPE_HEX       'H'
+#define TYPE_RETURN    'R'
+#define TYPE_UNKNOWN   'U'
 
 #define VERSION       'V'
 #define INIT          'I'

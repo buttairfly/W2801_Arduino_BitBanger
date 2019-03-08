@@ -111,7 +111,7 @@ void Command::printErrorAndReset(const String errorCode, const uint8_t s, const 
 
 boolean Command::isReturnCharType(const uint8_t s) {
   if (charType != TYPE_RETURN) {
-    printErrorAndReset(ErrorNoReturn, s); // error no return
+    printErrorAndReset(ErrorNoReturn, s);
     return false;
   }
   return true;
