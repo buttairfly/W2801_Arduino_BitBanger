@@ -196,7 +196,7 @@ void Command::initCommand(const uint8_t s) {
 
 void Command::calcParity(const uint8_t s) {
   if (charType != TYPE_RETURN) {
-    parity ⁼= lastChar;
+    parity ^= lastChar;
     lastChar = s;
   }
 }
