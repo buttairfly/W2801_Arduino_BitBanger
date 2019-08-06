@@ -17,6 +17,7 @@ void Command::ProcessCommand(const uint8_t s) {
     Serial.write(s);
     Serial.flush();
   }
+  calcParity(s);
   setCharType(s);
   if(!hasCommand) {
     if(charType != TYPE_COMMAND) {
@@ -180,6 +181,8 @@ void Command::reset(void) {
   paramPos = 0;
   ledPos = 0;
   charType = TYPE_UNDEFINED;
+  parity = PARITY_SEED;
+  lastChar = 0;
 }
 
 void Command::initCommand(const uint8_t s) {
@@ -189,6 +192,19 @@ void Command::initCommand(const uint8_t s) {
   } else {
     printErrorAndReset(ErrorNotInitialized, s);
   }
+}
+
+void Command::calcParity(const uint8_t s) {
+  if (charType != TYPE_RETURN) {
+    parity ⁼= lastChar;
+    lastChar = s;
+  }
+}
+
+boolean Command::checkParity() {
+  uint8_t highParity = (parity & 0xf0) >> 4;
+  uint8_t lowParity = parity & 0xf;
+  return getHexVal(highParity ^ lowParity) == lastChar;
 }
 
 void Command::processNumParam(const uint8_t s) {

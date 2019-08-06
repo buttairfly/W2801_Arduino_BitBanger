@@ -11,6 +11,7 @@
 #define HAS_NUM_SINGLE_COLOR 6
 
 #define LATCH_TIMEOUT  10
+#define PARITY_SEED    0xa5
 
 #define TYPE_UNDEFINED 'D'
 #define TYPE_COMMAND   'C'
@@ -41,6 +42,9 @@ class Command {
      void     initCommand(const uint8_t s);
      void     quiet(const uint8_t s);
 
+     void     calcParity(const uint8_t s);
+     boolean  checkParity(const uint8_t s);
+
      void     processNumParam(const uint8_t c);
      void     processColor(const uint8_t s);
 
@@ -64,6 +68,8 @@ class Command {
      uint8_t         charType;
      uint8_t         command;
      uint8_t         paramPos;
+     uint8_t         parity;
+     uint8_t         lastChar;
      uint16_t        ledPos;
      uint16_t        numParam;
      uint32_t        colorParam;
