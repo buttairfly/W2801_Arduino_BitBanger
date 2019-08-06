@@ -43,7 +43,7 @@ class Command {
      void     quiet(const uint8_t s);
 
      void     calcParity(const uint8_t s);
-     boolean  checkParity(const uint8_t s);
+     boolean  checkParity();
 
      void     processNumParam(const uint8_t c);
      void     processColor(const uint8_t s);
