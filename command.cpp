@@ -299,7 +299,8 @@ uint16_t Command::hex2uint16(uint16_t val, const uint8_t hex,
  * hex2color
  * take a hex string and convert it to a 0xRRGGBB color uint32
  */
-uint32_t hex2color(uint32_t val, const uint8_t hex, const uint8_t pos) {
+uint32_t Command::hex2color(uint32_t val, const uint8_t hex,
+                            const uint8_t pos) {
   if (pos == 0) {
     val = 0;
   }
@@ -312,13 +313,13 @@ uint32_t hex2color(uint32_t val, const uint8_t hex, const uint8_t pos) {
   return val;
 }
 
-uint8_t hex2uint8(uint8_t val, const uint8_t hex) {
+uint8_t Command::hex2uint8(uint8_t val, const uint8_t hex) {
   uint8_t number = getHexVal(hex);
   // shift 4 to make space for new digit, and add the 4 bits of the new digit
   return (val << 4) | (number & 0xF);
 }
 
-uint8_t getHexVal(const uint8_t hex) {
+uint8_t Command::getHexVal(const uint8_t hex) {
   // transform hex character to the 4bit equivalent number, using the ascii
   // table indexes
   if (hex >= '0' && hex <= '9')
