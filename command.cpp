@@ -213,6 +213,10 @@ void Command::initCommand(const uint8_t s) {
 void Command::calcParity(const uint8_t s) {
   parity ^= lastChar;
   lastChar = s;
+  Serial.print("\np");
+  Serial.write(parity);
+  Serial.print("\n");
+  Serial.flush();
 }
 
 uint8_t Command::calcHexParity() {
