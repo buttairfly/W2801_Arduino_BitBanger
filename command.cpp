@@ -70,7 +70,7 @@ void Command::ProcessCommand(const uint8_t s) {
           return;
         }
         hasParityByte = true;
-        return
+        return;
       }
       switch (command) {
         case SHADE:
