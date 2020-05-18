@@ -214,6 +214,9 @@ void Command::calcParity(const uint8_t s) {
   if (charType != TYPE_RETURN) {
     parity ^= lastChar;
     lastChar = s;
+
+    Serial.print("calcParity");
+    Serial.println(parity, HEX);
   }
 }
 
@@ -224,8 +227,9 @@ uint8_t Command::calcHexParity() {
 }
 
 boolean Command::checkParity(const uint8_t receivedParity) {
-  Serial.print("\nparity ");
+  Serial.print("\ncheckParity ");
   Serial.print(calcHexParity(), HEX);
+  Serial.print(" ");
   Serial.println(receivedParity, HEX);
   return calcHexParity() == receivedParity;
 }
