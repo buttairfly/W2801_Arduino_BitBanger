@@ -222,7 +222,7 @@ void Command::calcParity(const uint8_t s) {
 uint8_t Command::calcHexParity() {
   uint8_t highParity = (parity & 0xf0) >> 4;
   uint8_t lowParity = parity & 0xf;
-  return getHexVal(highParity ^ lowParity)
+  return getHexVal(highParity ^ lowParity);
 }
 
 boolean Command::checkParity(const uint8_t receivedParity) {
