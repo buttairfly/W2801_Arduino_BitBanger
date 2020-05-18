@@ -214,7 +214,7 @@ void Command::calcParity(const uint8_t s) {
   parity ^= lastChar;
   lastChar = s;
   Serial.print("\np");
-  Serial.write(parity);
+  Serial.print(parity, HEX);
   Serial.print("\n");
   Serial.flush();
 }
