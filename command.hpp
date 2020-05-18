@@ -21,12 +21,24 @@ const uint8_t TYPE_RETURN = 'R';
 const uint8_t TYPE_UNKNOWN = 'U';
 
 const uint8_t VERSION = 'V';
+const uint8_t LATCH_FRAME = 'L';
 const uint8_t INIT = 'I';
+const uint8_t QUIET_MODE = 'Q';
 const uint8_t SHADE = 'S';
 const uint8_t PIXEL = 'P';
 const uint8_t RAW_FRAME = 'R';
-const uint8_t LATCH_FRAME = 'L';
-const uint8_t QUIET_MODE = 'Q';
+
+/*
+const String CMD_TYPE_VERSION = "CHR";
+const String CMD_TYPE_LATCH = "CHR";
+const String CMD_TYPE_INIT = "CHHHHHR";
+const String CMD_TYPE_QUIET_MODE = "CHHHHHR";
+
+const String CMD_PARAM_VERSION = "VPR";
+const String CMD_PARAM_LATCH = "LPR";
+const String CMD_PARAM_INIT = "I1111PR";
+const String CMD_PARAM_QUIET_MODE = "Q1111PR";
+*/
 
 class Command {
  public:

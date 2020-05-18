@@ -44,7 +44,34 @@ void Command::ProcessCommand(const uint8_t s) {
       ProcessCommand(s);  // maybe it is a new command starting
       return;
     }
-    if (hasNumParam) {
+    if (!hasNumParam) {
+      if (charType == TYPE_RETURN) {
+        printErrorAndReset(ErrorUnknownReturn, s);
+        return;
+      }
+      processNumParam(s);
+      if (paramPos >= NUM_PARAM_CHARS) {
+        hasNumParam = true;
+        paramPos = 0;
+        if (initialized && command != QUIET_MODE &&
+            numParam > strip->numPixels()) {
+          printErrorAndReset(ErrorNumberParameterOverflow, s, numParam);
+          return;
+        }
+      }
+    } else {
+      if (!hasParityByte) {
+        if (s != TYPE_HEX) {
+          printErrorAndReset(ErrorNotHexNumberParameter, s);
+          return;
+        }
+        if (!checkParity(s)) {
+          printErrorAndReset(ErrorWrongParity, s, uint32_t(parity));
+          return;
+        }
+        hasParityByte = true;
+        return
+      }
       switch (command) {
         case SHADE:
           processShade(s);
@@ -70,35 +97,6 @@ void Command::ProcessCommand(const uint8_t s) {
         default:
           printErrorAndReset(ErrorUnknownCommand, s, command);
           return;
-      }
-    } else {
-      Serial.print("bla");
-      Serial.write(s);
-      if (!hasParityByte) {
-        hasParityByte = true;
-        if (s != TYPE_HEX) {
-          printErrorAndReset(ErrorNotHexNumberParameter, s);
-          return;
-        }
-        if (!checkParity(s)) {
-          printErrorAndReset(ErrorWrongParity, s, uint32_t(parity));
-          return;
-        }
-      } else {
-        if (charType == TYPE_RETURN) {
-          printErrorAndReset(ErrorUnknownReturn, s);
-          return;
-        }
-        processNumParam(s);
-        if (paramPos >= NUM_PARAM_CHARS) {
-          hasNumParam = true;
-          paramPos = 0;
-          if (initialized && command != QUIET_MODE &&
-              numParam > strip->numPixels()) {
-            printErrorAndReset(ErrorNumberParameterOverflow, s, numParam);
-            return;
-          }
-        }
       }
     }
   }
