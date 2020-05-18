@@ -222,17 +222,17 @@ void Command::calcParity(const uint8_t s) {
 uint8_t Command::calcHexParity() {
   uint8_t highParity = (parity & 0xf0) >> 4;
   uint8_t lowParity = parity & 0xf;
-  return hex2uint8(0, highParity ^ lowParity);
+  return highParity ^ lowParity;
 }
 
 boolean Command::checkParity(const uint8_t receivedParity) {
   Serial.print("\ncheckParity");
   Serial.print(calcHexParity(), HEX);
   Serial.print("\n received ");
-  Serial.print(receivedParity, HEX);
+  Serial.print(getHexVal(receivedParity), HEX);
   Serial.print("\n");
   Serial.flush();
-  return calcHexParity() == receivedParity;
+  return calcHexParity() == getHexVal(receivedParity);
 }
 
 void Command::processNumParam(const uint8_t s) {
@@ -340,14 +340,12 @@ uint8_t Command::hex2uint8(uint8_t val, const uint8_t hex) {
 }
 
 uint8_t Command::getHexVal(const uint8_t hex) {
-  // transform hex character to the 4bit equivalent number, using the ascii
-  // table indexes
+  // transform hex character to the lowercase 4bit equivalent number, using the
+  // ascii table indexes
   if (hex >= '0' && hex <= '9')
     return hex - '0';
   else if (hex >= 'a' && hex <= 'f')
     return hex - 'a' + 10;
-  else if (hex >= 'A' && hex <= 'F')
-    return hex - 'A' + 10;
   return TYPE_UNKNOWN;
 }
 
