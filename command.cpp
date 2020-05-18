@@ -61,8 +61,8 @@ void Command::ProcessCommand(const uint8_t s) {
       }
     } else {
       if (!hasParityByte) {
-        if (s != TYPE_HEX) {
-          printErrorAndReset(ErrorNotHexNumberParameter, s);
+        if (charType != TYPE_HEX) {
+          printErrorAndReset(ErrorNotHexNumberParameter, s, charType);
           return;
         }
         if (!checkParity(s)) {
