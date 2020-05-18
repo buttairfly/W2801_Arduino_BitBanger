@@ -3,8 +3,9 @@
 #define COMMAND_HPP
 
 #include <Adafruit_WS2801.h>
+
 #include "Arduino.h"
-#include "device.serial.arduino.error.hpp"
+#include "device.ledpanel.arduino.error.hpp"
 #include "version.hpp"
 
 const int NUM_PARAM_CHARS = 4;
