@@ -22,7 +22,7 @@ echo "// THIS FILE IS AUTO-GENERATED - DO NOT EDIT MANUALLY
 #ifndef VERSION_HPP
 #define VERSION_HPP
 
-#define BUILD_DATE    \"${DATE}\"
+#define BUILD_DATE \"${DATE}\"
 #define BUILD_VERSION \"${VERSION}\"
 #define BUILD_PROGRAM \"${BINARY}\"
 

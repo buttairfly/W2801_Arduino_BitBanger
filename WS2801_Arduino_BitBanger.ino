@@ -1,5 +1,5 @@
 #include <Adafruit_WS2801.h>
-#include "SPI.h" // Comment out this line if using Trinket or Gemma
+#include "SPI.h"  // Comment out this line if using Trinket or Gemma
 #include "command.hpp"
 
 /*****************************************************************************
@@ -28,15 +28,15 @@
 // Can be any valid output pins.
 // The colors of the wires may be totally different so
 // BE SURE TO CHECK YOUR PIXELS TO SEE WHICH WIRES TO USE!
-uint8_t dataPin  = 11;    // Green wire on China PixelStripe ==> MOSI D11
-uint8_t clockPin = 13;    // Blue wire on China PixelStripe ==> SCK D13
+uint8_t dataPin = 11;   // Green wire on China PixelStripe ==> MOSI D11
+uint8_t clockPin = 13;  // Blue wire on China PixelStripe ==> SCK D13
 
 // Don't forget to connect the ground wire to Arduino ground,
 // and the +5V wire to a +5V supply
 
 // Set the first variable to the NUMBER of pixels. Number of pixels in a row
 const int INITIAL_NUM_LED = 1;
-//Adafruit_WS2801 strip = Adafruit_WS2801(INITIAL_NUM_LED, dataPin, clockPin);
+// Adafruit_WS2801 strip = Adafruit_WS2801(INITIAL_NUM_LED, dataPin, clockPin);
 
 // Optional: leave off pin numbers to use hardware SPI
 // (pinout is then specific to each board and can't be changed)
@@ -52,11 +52,11 @@ void setup() {
   unsigned long lastTime = 0;
   unsigned long time;
 
-  delay(3000); // wait for serial to setup
+  delay(3000);  // wait for serial to setup
 
-  while(!command.IsInitialized()) {
+  while (!command.IsInitialized()) {
     time = millis();
-    if(time - lastTime > WAIT_TIME_MS){
+    if (time - lastTime > WAIT_TIME_MS) {
       lastTime = time;
       demo();
     }
@@ -64,24 +64,22 @@ void setup() {
   }
 }
 
-void loop() {
-  processCommand();
-}
+void loop() { processCommand(); }
 
 void initCommand(void) {
-  while(Serial.available() && !command.IsInitialized()) {
+  while (Serial.available() && !command.IsInitialized()) {
     readChar();
   }
 }
 
 void processCommand(void) {
-  while(Serial.available()) {
+  while (Serial.available()) {
     readChar();
   }
 }
 
 void readChar(void) {
-  const uint8_t s = Serial.read();// read the incoming char
+  const uint8_t s = Serial.read();  // read the incoming char
   command.ProcessCommand(s);
 }
 
@@ -89,7 +87,7 @@ static uint16_t rainbowCyclePos = 0;
 void demo() {
   const int waitTime = 0;
   rainbowCyclePos++;
-  if(rainbowCyclePos >= 256*5) {
+  if (rainbowCyclePos >= 256 * 5) {
     rainbowCyclePos = 0;
   }
   rainbowCycle(rainbowCyclePos);
@@ -98,9 +96,9 @@ void demo() {
 void rainbow(uint8_t j) {
   int i;
   for (i = 0; i < strip.numPixels(); i++) {
-    strip.setPixelColor(i, Wheel( (i + j) % 255));
+    strip.setPixelColor(i, Wheel((i + j) % 255));
   }
-  strip.show();   // write all the pixels out
+  strip.show();  // write all the pixels out
 }
 
 // Slightly different, this one makes the rainbow wheel equally distributed
@@ -112,9 +110,9 @@ void rainbowCycle(uint16_t j) {
     // (thats the i / strip.numPixels() part)
     // Then add in j which makes the colors go around per pixel
     // the % 96 is to make the wheel cycle around
-    strip.setPixelColor(i, Wheel( ((i * 256 / strip.numPixels()) + j) % 256) );
+    strip.setPixelColor(i, Wheel(((i * 256 / strip.numPixels()) + j) % 256));
   }
-  strip.show();   // write all the pixels out
+  strip.show();  // write all the pixels out
 }
 
 // fill the dots one after the other with said color
@@ -132,8 +130,7 @@ void colorWipe(uint32_t c, uint8_t wait) {
 /* Helper functions */
 
 // Create a 24 bit color value from R,G,B
-uint32_t Color(byte r, byte g, byte b)
-{
+uint32_t Color(byte r, byte g, byte b) {
   uint32_t c;
   c = r;
   c <<= 8;
@@ -143,10 +140,9 @@ uint32_t Color(byte r, byte g, byte b)
   return c;
 }
 
-//Input a value 0 to 255 to get a color value.
-//The colours are a transition r - g -b - back to r
-uint32_t Wheel(byte WheelPos)
-{
+// Input a value 0 to 255 to get a color value.
+// The colours are a transition r - g -b - back to r
+uint32_t Wheel(byte WheelPos) {
   if (WheelPos < 85) {
     return Color(WheelPos * 3, 255 - WheelPos * 3, 0);
   } else if (WheelPos < 170) {
