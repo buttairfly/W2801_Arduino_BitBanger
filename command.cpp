@@ -66,7 +66,7 @@ void Command::ProcessCommand(const uint8_t s) {
           return;
         }
         if (!checkParity(s)) {
-          printErrorAndReset(ErrorWrongParity, s, calcHexParity());
+          printErrorAndReset(ErrorWrongParity, s, getHexVal(calcHexParity()));
           return;
         }
         hasParityByte = true;
