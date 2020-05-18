@@ -72,18 +72,22 @@ void Command::ProcessCommand(const uint8_t s) {
           return;
       }
     } else {
-      if (charType == TYPE_RETURN) {
-        printErrorAndReset(ErrorUnknownReturn, s);
-        return;
-      }
-      processNumParam(s);
-      if (paramPos >= NUM_PARAM_CHARS) {
-        hasNumParam = true;
-        paramPos = 0;
-        if (initialized && command != QUIET_MODE &&
-            numParam > strip->numPixels()) {
-          printErrorAndReset(ErrorNumberParameterOverflow, s, numParam);
+      if (!hasParityByte) {
+        hasParityByte = true;
+      } else {
+        if (charType == TYPE_RETURN) {
+          printErrorAndReset(ErrorUnknownReturn, s);
           return;
+        }
+        processNumParam(s);
+        if (paramPos >= NUM_PARAM_CHARS) {
+          hasNumParam = true;
+          paramPos = 0;
+          if (initialized && command != QUIET_MODE &&
+              numParam > strip->numPixels()) {
+            printErrorAndReset(ErrorNumberParameterOverflow, s, numParam);
+            return;
+          }
         }
       }
     }
@@ -181,6 +185,7 @@ void Command::reset(void) {
   numParam = 0;
   hasCommand = false;
   hasNumParam = false;
+  hasParityByte = false;
   paramPos = 0;
   ledPos = 0;
   charType = TYPE_UNDEFINED;
@@ -189,7 +194,7 @@ void Command::reset(void) {
 }
 
 void Command::initCommand(const uint8_t s) {
-  if (initialized || s == INIT || s == VERSION) {
+  if (initialized || s == INIT || s == VERSION | s == QUIET_MODE) {
     command = s;
     hasCommand = true;
   } else {
