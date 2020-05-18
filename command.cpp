@@ -76,7 +76,7 @@ void Command::ProcessCommand(const uint8_t s) {
         hasParityByte = true;
         if (!checkParity(s)) {
           printErrorAndReset(ErrorWrongParity, s, uint32_t(parity));
-          return
+          return;
         }
       } else {
         if (charType == TYPE_RETURN) {
