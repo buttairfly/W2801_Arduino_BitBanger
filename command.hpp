@@ -58,6 +58,7 @@ class Command {
 
   void calcParity(const uint8_t s);
   boolean checkParity(const uint8_t receivedParity);
+  uint8_t calcHexParity();
 
   void processNumParam(const uint8_t c);
   void processColor(const uint8_t s);

@@ -14,9 +14,9 @@ void Command::ProcessCommand(const uint8_t s) {
     Serial.write(s);
     Serial.flush();
   }
-  calcParity(s);
   setCharType(s);
   if (!hasCommand) {
+    calcParity(s);
     if (charType != TYPE_COMMAND) {
       printErrorAndReset(ErrorNoCommand, s);
       return;
@@ -49,6 +49,7 @@ void Command::ProcessCommand(const uint8_t s) {
         printErrorAndReset(ErrorUnknownReturn, s);
         return;
       }
+      calcParity(s);
       processNumParam(s);
       if (paramPos >= NUM_PARAM_CHARS) {
         hasNumParam = true;
@@ -66,12 +67,13 @@ void Command::ProcessCommand(const uint8_t s) {
           return;
         }
         if (!checkParity(s)) {
-          printErrorAndReset(ErrorWrongParity, s, uint32_t(parity));
+          printErrorAndReset(ErrorWrongParity, s, calcHexParity());
           return;
         }
         hasParityByte = true;
         return;
       }
+      calcParity(s);
       switch (command) {
         case SHADE:
           processShade(s);
@@ -217,10 +219,14 @@ void Command::calcParity(const uint8_t s) {
   }
 }
 
-boolean Command::checkParity(const uint8_t receivedParity) {
+uint8_t Command::calcHexParity() {
   uint8_t highParity = (parity & 0xf0) >> 4;
   uint8_t lowParity = parity & 0xf;
-  return getHexVal(highParity ^ lowParity) == receivedParity;
+  return getHexVal(highParity ^ lowParity)
+}
+
+boolean Command::checkParity(const uint8_t receivedParity) {
+  return calcHexParity() == receivedParity;
 }
 
 void Command::processNumParam(const uint8_t s) {
