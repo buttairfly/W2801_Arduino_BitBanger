@@ -222,7 +222,11 @@ void Command::calcParity(const uint8_t s) {
 uint8_t Command::calcHexParity() {
   uint8_t highParity = (parity & 0xf0) >> 4;
   uint8_t lowParity = parity & 0xf;
-  return getHexVal(highParity ^ lowParity);
+  uint8_t calulatedParity = highParity ^ lowParity;
+
+  Serial.print("parity ");
+  Serial.print(calulatedParity, HEX);
+  return calulatedParity;
 }
 
 boolean Command::checkParity(const uint8_t receivedParity) {
