@@ -72,8 +72,14 @@ void Command::ProcessCommand(const uint8_t s) {
           return;
       }
     } else {
+      Serial.print("bla");
+      Serial.write(s);
       if (!hasParityByte) {
         hasParityByte = true;
+        if (s != TYPE_HEX) {
+          printErrorAndReset(ErrorNotHexNumberParameter, s);
+          return;
+        }
         if (!checkParity(s)) {
           printErrorAndReset(ErrorWrongParity, s, uint32_t(parity));
           return;
