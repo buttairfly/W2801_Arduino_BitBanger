@@ -233,7 +233,7 @@ void Command::processColor(const uint8_t s) {
 
 void Command::processShade(const uint8_t s) {
   if (charType == TYPE_RETURN) {
-    if (checkParity(s)) {
+    if (checkParity()) {
       if (paramPos >= HAS_NUM_SINGLE_COLOR) {
         for (uint16_t i = 0; i < numParam; i++) {
           strip->setPixelColor(i, colorParam);
