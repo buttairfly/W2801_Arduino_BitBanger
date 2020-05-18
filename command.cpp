@@ -2,7 +2,7 @@
 
 Command::Command(Adafruit_WS2801 *_strip) : strip(_strip) {
   initialized = false;
-  quietMode = true;
+  quietMode = false;
   latchTime = millis() - LATCH_TIMEOUT;
   reset();
 }
@@ -74,6 +74,10 @@ void Command::ProcessCommand(const uint8_t s) {
     } else {
       if (!hasParityByte) {
         hasParityByte = true;
+        if (!checkParity(s)) {
+          printErrorAndReset(ErrorWrongParity, s, uint32_t(parity));
+          return
+        }
       } else {
         if (charType == TYPE_RETURN) {
           printErrorAndReset(ErrorUnknownReturn, s);
@@ -100,13 +104,13 @@ void Command::printErrorAndReset(const String errorCode, const uint8_t s,
     Serial.print("\n");  // initial new line to highlight error
   }
   Serial.print(errorCode);
-  Serial.print(",");
   if (param != 0xFFFFFFFF) {
+    Serial.print(",");
     Serial.print("p");
     Serial.write(param);
-    Serial.print(",");
   }
   if (s != 0x0) {
+    Serial.print(",");
     Serial.print("s");
     Serial.write(s);
   }
@@ -209,10 +213,10 @@ void Command::calcParity(const uint8_t s) {
   }
 }
 
-boolean Command::checkParity() {
+boolean Command::checkParity(const uint8_t receivedParity) {
   uint8_t highParity = (parity & 0xf0) >> 4;
   uint8_t lowParity = parity & 0xf;
-  return getHexVal(highParity ^ lowParity) == lastChar;
+  return getHexVal(highParity ^ lowParity) == receivedParity;
 }
 
 void Command::processNumParam(const uint8_t s) {
@@ -238,21 +242,16 @@ void Command::processColor(const uint8_t s) {
 
 void Command::processShade(const uint8_t s) {
   if (charType == TYPE_RETURN) {
-    if (checkParity()) {
-      if (paramPos >= HAS_NUM_SINGLE_COLOR) {
-        for (uint16_t i = 0; i < numParam; i++) {
-          strip->setPixelColor(i, colorParam);
-        }
-        reset();
-      } else {
-        printErrorAndReset(ErrorNotEnoughBytesColorParam, s, paramPos);
-        return;
+    if (paramPos >= HAS_NUM_SINGLE_COLOR) {
+      for (uint16_t i = 0; i < numParam; i++) {
+        strip->setPixelColor(i, colorParam);
       }
-      return;
+      reset();
     } else {
       printErrorAndReset(ErrorNotEnoughBytesColorParam, s, paramPos);
       return;
     }
+    return;
   }
   processColor(s);
 }
