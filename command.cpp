@@ -226,6 +226,12 @@ uint8_t Command::calcHexParity() {
 }
 
 boolean Command::checkParity(const uint8_t receivedParity) {
+  Serial.print("\ncheckParity");
+  Serial.print(calcHexParity(), HEX);
+  Serial.print("\n received ");
+  Serial.print(receivedParity, HEX);
+  Serial.print("\n");
+  Serial.flush();
   return calcHexParity() == receivedParity;
 }
 
