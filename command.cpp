@@ -154,9 +154,7 @@ void Command::init(const uint8_t s) {
       Serial.print(strip->numPixels(), HEX);
       if (numParam == strip->numPixels()) {
         initialized = true;
-      } else
-
-      {
+      } else {
         Serial.print(" should be ");
         Serial.print(numParam, HEX);
       }
@@ -213,10 +211,10 @@ void Command::initCommand(const uint8_t s) {
 void Command::calcParity(const uint8_t s) {
   parity ^= lastChar;
   lastChar = s;
-  Serial.print("\np");
-  Serial.print(parity, HEX);
-  Serial.print("\n");
-  Serial.flush();
+  // Serial.print("\np");
+  // Serial.print(parity, HEX);
+  // Serial.print("\n");
+  // Serial.flush();
 }
 
 uint8_t Command::calcHexParity() {
@@ -226,12 +224,12 @@ uint8_t Command::calcHexParity() {
 }
 
 boolean Command::checkParity(const uint8_t receivedParity) {
-  Serial.print("\ncheckParity");
-  Serial.print(calcHexParity(), HEX);
-  Serial.print("\n received ");
-  Serial.print(getHexVal(receivedParity), HEX);
-  Serial.print("\n");
-  Serial.flush();
+  // Serial.print("\ncheckParity");
+  // Serial.print(calcHexParity(), HEX);
+  // Serial.print("\n received ");
+  // Serial.print(getHexVal(receivedParity), HEX);
+  // Serial.print("\n");
+  // Serial.flush();
   return calcHexParity() == getHexVal(receivedParity);
 }
 
