@@ -27,11 +27,14 @@ void Command::ProcessCommand(const uint8_t s) {
         hasNumParam = true;  // version and latchFrame do not have numParam
       case QUIET_MODE:  // enables or disables return of received parameters
       case INIT:        // Show number of initialized leds
+        initCommand(s);
+        return;
       case PIXEL:  // Colorize pixel (position = numParam, parameter = color) no
                    // latch
       case SHADE:  // Shade first numParam leds (length = numParam, parameter =
                    // color) and latch
       case RAW_FRAME:  // Frame input (length = numParam, colors) and latch
+        moreParams = true;
         initCommand(s);
         return;
       default:
@@ -60,7 +63,7 @@ void Command::ProcessCommand(const uint8_t s) {
         }
       }
     } else {
-      if (!hasParityByte) {
+      if (!hasParityByte && !moreParams) {
         if (charType != TYPE_HEX) {
           printErrorAndReset(ErrorNotHexNumberParameter, s, charType);
           return;
@@ -134,9 +137,9 @@ boolean Command::isReturnCharType(const uint8_t s) {
 void Command::printVersion(const uint8_t s) {
   if (isReturnCharType(s)) {
     Serial.print(BUILD_PROGRAM);
-    Serial.print(": ");
+    Serial.print(":");
     Serial.print(BUILD_DATE);
-    Serial.print(" - ");
+    Serial.print("-");
     Serial.print(BUILD_VERSION);
     Serial.print("\n");
     Serial.flush();
@@ -192,6 +195,7 @@ void Command::reset(void) {
   hasCommand = false;
   hasNumParam = false;
   hasParityByte = false;
+  moreParams = false;
   paramPos = 0;
   ledPos = 0;
   charType = TYPE_UNDEFINED;
@@ -268,6 +272,9 @@ void Command::processShade(const uint8_t s) {
     return;
   }
   processColor(s);
+  if (paramPos == 6) {
+    moreParams = false;
+  }
 }
 
 void Command::processPixel(const uint8_t s) {
@@ -287,6 +294,9 @@ void Command::processPixel(const uint8_t s) {
     return;
   }
   processColor(s);
+  if (paramPos == 6) {
+    moreParams = false;
+  }
 }
 
 void Command::processRawFrame(const uint8_t s) {

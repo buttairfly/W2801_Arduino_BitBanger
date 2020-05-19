@@ -78,6 +78,7 @@ class Command {
 
   boolean hasCommand;
   boolean hasNumParam;
+  boolean moreParams;
   boolean hasParityByte;
   boolean initialized;
   boolean quietMode;
