@@ -215,10 +215,6 @@ void Command::initCommand(const uint8_t s) {
 void Command::calcParity(const uint8_t s) {
   parity ^= lastChar;
   lastChar = s;
-  // Serial.print("\np");
-  // Serial.print(parity, HEX);
-  // Serial.print("\n");
-  // Serial.flush();
 }
 
 uint8_t Command::calcHexParity() {
@@ -228,12 +224,6 @@ uint8_t Command::calcHexParity() {
 }
 
 boolean Command::checkParity(const uint8_t receivedParity) {
-  // Serial.print("\ncheckParity");
-  // Serial.print(calcHexParity(), HEX);
-  // Serial.print("\n received ");
-  // Serial.print(getHexVal(receivedParity), HEX);
-  // Serial.print("\n");
-  // Serial.flush();
   return calcHexParity() == getHexVal(receivedParity);
 }
 
@@ -243,7 +233,6 @@ void Command::processNumParam(const uint8_t s) {
     paramPos++;
   } else {
     printErrorAndReset(ErrorNotHexNumberParameter, s);
-    return;
   }
 }
 
@@ -251,10 +240,8 @@ void Command::processColor(const uint8_t s) {
   if (charType == TYPE_HEX) {
     colorParam = hex2color(colorParam, s, paramPos);
     paramPos++;
-    return;
   } else {
     printErrorAndReset(ErrorNotHexColorParameter, s);
-    return;
   }
 }
 
@@ -267,12 +254,11 @@ void Command::processShade(const uint8_t s) {
       reset();
     } else {
       printErrorAndReset(ErrorNotEnoughBytesColorParam, s, paramPos);
-      return;
     }
     return;
   }
   processColor(s);
-  if (paramPos == 6) {
+  if (paramPos == HAS_NUM_SINGLE_COLOR) {
     moreParams = false;
   }
 }
@@ -284,7 +270,6 @@ void Command::processPixel(const uint8_t s) {
       reset();
     } else {
       printErrorAndReset(ErrorNotEnoughBytesColorParam, s, paramPos);
-      return;
     }
     return;
   }
@@ -294,15 +279,28 @@ void Command::processPixel(const uint8_t s) {
     return;
   }
   processColor(s);
-  if (paramPos == 6) {
+  if (paramPos == HAS_NUM_SINGLE_COLOR) {
     moreParams = false;
   }
 }
 
 void Command::processRawFrame(const uint8_t s) {
-  Serial.print("processRawFrame\n");
-  Serial.flush();
-  reset();
+  if (charType == TYPE_RETURN) {
+    latch(s);
+    return;
+  }
+
+  processColor(s);
+  if (paramPos == HAS_NUM_SINGLE_COLOR) {
+    paramPos = 0;
+    strip->setPixelColor(ledPos, colorParam);
+    ledPos++;
+  } else {
+    printErrorAndReset(ErrorNotEnoughBytesColorParam, s, paramPos);
+  }
+  if (ledPos >= numParam) {
+    moreParams = false;
+  }
 }
 
 /**
