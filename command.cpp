@@ -192,7 +192,11 @@ void Command::latch(const uint8_t s) {
 }
 
 void Command::reset(void) {
-  Serial.println("X");
+  Serial.print(charType);
+  Serial.print("X");
+  Serial.print(lastChar);
+  Serial.print("X");
+  Serial.print("\n");
   Serial.flush();
   colorParam = 0;
   numParam = 0;
