@@ -112,7 +112,9 @@ void Command::ProcessCommand(const uint8_t s) {
 void Command::printErrorAndReset(const String errorCode, const uint8_t s,
                                  const uint32_t param = 0xFFFFFFFF) {
   if (noCmd && errorCode == ErrorNoCommand) {
+    // do not re-spam error for every letter
     reset();
+    return;
   }
   noCmd = false;
   if (!quietMode) {
