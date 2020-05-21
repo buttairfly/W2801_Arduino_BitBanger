@@ -274,7 +274,7 @@ void Command::processPixel(const uint8_t s) {
     return;
   }
   // also test error on identity here
-  if (numParam == strip->numPixels()) {
+  if (numParam >= strip->numPixels()) {
     printErrorAndReset(ErrorNumberParameterOverflowEqualsNumLeds, s, numParam);
     return;
   }
@@ -291,10 +291,14 @@ void Command::processRawFrame(const uint8_t s) {
   }
 
   processColor(s);
-  if (paramPos == HAS_NUM_SINGLE_COLOR) {
+  if (paramPos >= HAS_NUM_SINGLE_COLOR) {
     paramPos = 0;
     strip->setPixelColor(ledPos, colorParam);
     ledPos++;
+
+    Serial.print("LP ");
+    Serial.println(ledPos, HEX);
+    Serial.flush();
   } else {
     printErrorAndReset(ErrorNotEnoughBytesColorParam, s, paramPos);
   }
