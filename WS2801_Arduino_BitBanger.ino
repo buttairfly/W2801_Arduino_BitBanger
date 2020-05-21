@@ -1,4 +1,5 @@
 #include <Adafruit_WS2801.h>
+
 #include "SPI.h"  // Comment out this line if using Trinket or Gemma
 #include "command.hpp"
 
@@ -73,7 +74,7 @@ void initCommand(void) {
 }
 
 void processCommand(void) {
-  while (Serial.available()) {
+  if (Serial.available()) {
     readChar();
   }
 }

@@ -36,6 +36,8 @@ void Command::ProcessCommand(const uint8_t s) {
       case RAW_FRAME:  // Frame input (length = numParam, colors) and latch
         moreParams = true;
         initCommand(s);
+        Serial.println("RAW");
+        Serial.flush();
         return;
       default:
         printErrorAndReset(ErrorNotDefinedCommand, s);
@@ -190,6 +192,8 @@ void Command::latch(const uint8_t s) {
 }
 
 void Command::reset(void) {
+  Serial.println("X");
+  Serial.flush();
   colorParam = 0;
   numParam = 0;
   hasCommand = false;
