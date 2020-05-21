@@ -285,6 +285,7 @@ void Command::processPixel(const uint8_t s) {
 }
 
 void Command::processRawFrame(const uint8_t s) {
+  Serial.print("R ");
   if (charType == TYPE_RETURN) {
     latch(s);
     return;
