@@ -192,7 +192,9 @@ void Command::latch(const uint8_t s) {
 }
 
 void Command::reset(void) {
-  Serial.print(charType);
+  Serial.print(paramPos);
+  Serial.print("X");
+  Serial.print(ledPos);
   Serial.print("X");
   Serial.print(lastChar);
   Serial.print("X");
