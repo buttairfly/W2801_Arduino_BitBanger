@@ -26,7 +26,7 @@ const uint8_t INIT = 'I';
 const uint8_t QUIET_MODE = 'Q';
 const uint8_t SHADE = 'S';
 const uint8_t PIXEL = 'P';
-const uint8_t RAW_FRAME = 'R';
+const uint8_t RAW_FRAME = 'W';
 
 /*
 const String CMD_TYPE_VERSION = "CHR";
@@ -38,8 +38,8 @@ const String CMD_TYPE_RAW_FRAME = "RHHHHHHHHHHHHHHHHHHHHHHHHHHHH...HR";
 const String CMD_PARAM_VERSION = "VPR";
 const String CMD_PARAM_LATCH = "LPR";
 const String CMD_PARAM_INIT = "I1111PR";
-const String CMD_PARAM_INIT = "I1111PR";
-const String CMD_PARAM_RAW_FRAME = "R1111222222333333222222333333...PR";
+const String CMD_PARAM_QUIET_MODE = "Q1111PR";
+const String CMD_PARAM_RAW_FRAME = "W1111222222333333222222333333...PR";
 */
 
 class Command {

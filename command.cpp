@@ -24,17 +24,30 @@ void Command::ProcessCommand(const uint8_t s) {
       return;
     }
     switch (s) {
-      case VERSION:          // print version
-      case LATCH_FRAME:      // latch buffered frame
-        hasNumParam = true;  // version and latchFrame do not have numParam
+      case VERSION:  // print version
+        hasNumParam = true;
+        initCommand(s);
+        return;
+      case LATCH_FRAME:  // latch buffered frame
+        hasNumParam = true;
+        initCommand(s);
+        return;
       case QUIET_MODE:  // enables or disables return of received parameters
-      case INIT:        // Show number of initialized leds
+        initCommand(s);
+        return;
+      case INIT:  // Show number of initialized leds
         initCommand(s);
         return;
       case PIXEL:  // Colorize pixel (position = numParam, parameter = color) no
-                   // latch
+        // latch
+        moreParams = true;
+        initCommand(s);
+        return;
       case SHADE:  // Shade first numParam leds (length = numParam, parameter =
-                   // color) and latch
+        // color) and latch
+        moreParams = true;
+        initCommand(s);
+        return;
       case RAW_FRAME:  // Frame input (length = numParam, colors) and latch
         moreParams = true;
         initCommand(s);
