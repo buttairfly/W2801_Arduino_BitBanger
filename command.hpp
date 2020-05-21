@@ -84,6 +84,7 @@ class Command {
   boolean hasParityByte;
   boolean initialized;
   boolean quietMode;
+  boolean noCmd;
   uint8_t charType;
   uint8_t command;
   uint8_t paramPos;

@@ -3,6 +3,7 @@
 Command::Command(Adafruit_WS2801 *_strip) : strip(_strip) {
   initialized = false;
   quietMode = false;
+  noCmd = false;
   latchTime = millis() - LATCH_TIMEOUT;
   reset();
 }
@@ -19,6 +20,7 @@ void Command::ProcessCommand(const uint8_t s) {
   if (!hasCommand) {
     if (charType != TYPE_COMMAND) {
       printErrorAndReset(ErrorNoCommand, s);
+      noCmd = true;
       return;
     }
     switch (s) {
@@ -109,6 +111,10 @@ void Command::ProcessCommand(const uint8_t s) {
 
 void Command::printErrorAndReset(const String errorCode, const uint8_t s,
                                  const uint32_t param = 0xFFFFFFFF) {
+  if (noCmd && errorCode == ErrorNoCommand) {
+    reset();
+  }
+  noCmd = false;
   if (!quietMode) {
     Serial.print("\n");  // initial new line to highlight error
   }
