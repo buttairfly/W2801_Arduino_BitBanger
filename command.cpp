@@ -202,14 +202,16 @@ void Command::reset(void) {
   hasNumParam = false;
   hasParityByte = false;
   moreParams = false;
+  hasCurrentRawFramePart = false;
+  hasCurrentRawFramePartNumLed = false;
   colorParam = 0;
   numParam = 0;
   paramPos = 0;
   ledPos = 0;
   lastChar = 0;
   command = 0;
-  currentRawFramePart = 0xff;
-  currentRawFramePartNumLed = 0xff;
+  currentRawFramePart = 0;
+  currentRawFramePartNumLed = 0;
   charType = TYPE_UNDEFINED;
   parity = PARITY_SEED;
 }
