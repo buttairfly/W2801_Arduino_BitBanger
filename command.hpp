@@ -8,6 +8,7 @@
 #include "device.ledpanel.arduino.error.hpp"
 #include "version.hpp"
 
+const uint8_t HAS_NUM_RAW_FRAME_PART = 2;
 const uint8_t NUM_PARAM_CHARS = 4;
 const uint8_t HAS_NUM_SINGLE_COLOR = 6;
 
@@ -29,17 +30,17 @@ const uint8_t PIXEL = 'P';
 const uint8_t RAW_FRAME = 'W';
 
 /*
-const String CMD_TYPE_VERSION = "CHR";
-const String CMD_TYPE_LATCH = "CHR";
-const String CMD_TYPE_INIT = "CHHHHHR";
-const String CMD_TYPE_QUIET_MODE = "CHHHHHR";
-const String CMD_TYPE_RAW_FRAME = "RHHHHHHHHHHHHHHHHHHHHHHHHHHHH...HR";
+const String CMD_TYPE_VERSION =     "CHR";
+const String CMD_TYPE_LATCH =       "CHR";
+const String CMD_TYPE_INIT =        "CHHHHHR";
+const String CMD_TYPE_QUIET_MODE =  "CHHHHHR";
+const String CMD_TYPE_RAW_FRAME =   "WHHHH HHHH HHHHHHHHHHHHHHHHHHHHHHHH...HR";
 
-const String CMD_PARAM_VERSION = "VPR";
-const String CMD_PARAM_LATCH = "LPR";
-const String CMD_PARAM_INIT = "I1111PR";
-const String CMD_PARAM_QUIET_MODE = "Q1111PR";
-const String CMD_PARAM_RAW_FRAME = "W1111222222333333222222333333...PR";
+const String CMD_PARAM_VERSION =    "VPR";
+const String CMD_PARAM_LATCH =      "LPR";
+const String CMD_PARAM_INIT =       "INNNNPR";
+const String CMD_PARAM_QUIET_MODE = "QNNNNPR";
+const String CMD_PARAM_RAW_FRAME =  "WNNNN NNCC 222222333333222222333333...PR";
 */
 
 class Command {
@@ -85,6 +86,10 @@ class Command {
   boolean initialized;
   boolean quietMode;
   boolean noCmd;
+  boolean hasCurrentRawFramePart;
+  boolean hasCurrentRawFramePartNumLed;
+  uint8_t currentRawFramePart;
+  uint8_t currentRawFramePartNumLed;
   uint8_t charType;
   uint8_t command;
   uint8_t paramPos;

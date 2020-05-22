@@ -198,24 +198,18 @@ void Command::latch(const uint8_t s) {
 }
 
 void Command::reset(void) {
-  Serial.print(paramPos);
-  Serial.print("X");
-  Serial.print(ledPos);
-  Serial.print("X");
-  Serial.print(lastChar);
-  Serial.print("X");
-  Serial.print("\n");
-  Serial.flush();
-  colorParam = 0x00000000;
-  numParam = 0x0000;
   hasCommand = false;
   hasNumParam = false;
   hasParityByte = false;
   moreParams = false;
-  paramPos = 0x00;
-  ledPos = 0x0000;
-  lastChar = 0x00;
-  command = 0x00;
+  colorParam = 0;
+  numParam = 0;
+  paramPos = 0;
+  ledPos = 0;
+  lastChar = 0;
+  command = 0;
+  currentRawFramePart = 0xff;
+  currentRawFramePartNumLed = 0xff;
   charType = TYPE_UNDEFINED;
   parity = PARITY_SEED;
 }
@@ -253,6 +247,25 @@ void Command::processNumParam(const uint8_t s) {
   }
 }
 
+void Command::processCurrentRawFramePart(const uint8_t s) {
+  if (charType == TYPE_HEX) {
+    currentRawFramePart = hex2uint8(currentRawFramePart, s, paramPos);
+    paramPos++;
+  } else {
+    printErrorAndReset(ErrorNotHexNumberParameter, s);
+  }
+}
+
+void Command::processCurrentRawFramePartNumLed(const uint8_t s) {
+  if (charType == TYPE_HEX) {
+    currentRawFramePartNumLed =
+        hex2uint8(currentRawFramePartNumLed, s, paramPos);
+    paramPos++;
+  } else {
+    printErrorAndReset(ErrorNotHexNumberParameter, s);
+  }
+}
+
 void Command::processColor(const uint8_t s) {
   if (charType == TYPE_HEX) {
     colorParam = hex2color(colorParam, s, paramPos);
@@ -263,7 +276,7 @@ void Command::processColor(const uint8_t s) {
 }
 
 void Command::processShade(const uint8_t s) {
-  if (charType == TYPE_RETURN) {
+  if (charType == TYPE_RETURN && hasParityByte) {
     if (paramPos >= HAS_NUM_SINGLE_COLOR) {
       for (uint16_t i = 0; i < numParam; i++) {
         strip->setPixelColor(i, colorParam);
@@ -281,7 +294,7 @@ void Command::processShade(const uint8_t s) {
 }
 
 void Command::processPixel(const uint8_t s) {
-  if (charType == TYPE_RETURN) {
+  if (charType == TYPE_RETURN && hasParityByte) {
     if (paramPos >= HAS_NUM_SINGLE_COLOR) {
       strip->setPixelColor(numParam, colorParam);
       reset();
@@ -302,29 +315,39 @@ void Command::processPixel(const uint8_t s) {
 }
 
 void Command::processRawFrame(const uint8_t s) {
-  if (charType == TYPE_RETURN) {
-    latch(s);
+  if (charType == TYPE_RETURN && hasParityByte) {
+    reset();
+    return;
+  }
+  if (!hasCurrentRawFramePart) {
+    processCurrentRawFramePart(s);
+    if (paramPos == HAS_NUM_RAW_FRAME_PART) {
+      paramPos = 0;
+      hasCurrentRawFramePart = true;
+    }
+    return;
+  }
+
+  if (!hasCurrentRawFramePartNumLed) {
+    processCurrentRawFramePartNumLed(s);
+    if (paramPos == HAS_NUM_RAW_FRAME_PART) {
+      paramPos = 0;
+      hasCurrentRawFramePartNumLed = true;
+    }
     return;
   }
 
   processColor(s);
   if (paramPos == HAS_NUM_SINGLE_COLOR) {
     paramPos = 0;
-    strip->setPixelColor(ledPos, colorParam);
-
-    Serial.print("C");
-    Serial.print(colorParam, HEX);
-    Serial.print("L");
-    Serial.print(ledPos, HEX);
-    Serial.print("\n");
-    Serial.flush();
+    strip->setPixelColor(numParam + ledPos, colorParam);
     ledPos++;
   }
   if (paramPos > HAS_NUM_SINGLE_COLOR) {
     printErrorAndReset(ErrorNotEnoughBytesColorParam, s, paramPos);
     return;
   }
-  if (ledPos >= numParam) {
+  if (ledPos >= currentRawFramePartNumLed) {
     moreParams = false;
   }
 }
