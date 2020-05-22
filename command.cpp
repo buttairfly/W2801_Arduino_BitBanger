@@ -340,7 +340,10 @@ void Command::processRawFrame(const uint8_t s) {
   processColor(s);
   if (paramPos == HAS_NUM_SINGLE_COLOR) {
     paramPos = 0;
-    strip->setPixelColor(numParam + ledPos, colorParam);
+    strip->setPixelColor(
+        uint16_t(currentRawFramePart) * uint16_t(currentRawFramePartNumLed) +
+            ledPos,
+        colorParam);
     Serial.print("C");
     Serial.print(colorParam, HEX);
     Serial.print("L");
