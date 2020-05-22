@@ -74,7 +74,7 @@ class Command {
 
   uint32_t hex2color(uint32_t val, const uint8_t hex, const uint8_t pos);
   uint16_t hex2uint16(uint16_t val, const uint8_t hex, const uint8_t pos);
-  uint8_t hex2uint8(uint8_t val, const uint8_t hex);
+  uint8_t hex2uint8(uint8_t val, const uint8_t hex, const uint8_t pos);
 
   uint8_t getCharType(const uint8_t s);
   uint8_t getHexVal(const uint8_t hex);

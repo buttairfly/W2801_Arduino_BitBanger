@@ -249,7 +249,7 @@ void Command::processNumParam(const uint8_t s) {
 
 void Command::processCurrentRawFramePart(const uint8_t s) {
   if (charType == TYPE_HEX) {
-    currentRawFramePart = hex2uint8(currentRawFramePart, s, paramPos);
+    currentRawFramePart = hex2uint8(currentRawFramePart, s, paramPos % 2);
     paramPos++;
   } else {
     printErrorAndReset(ErrorNotHexNumberParameter, s);
@@ -259,7 +259,7 @@ void Command::processCurrentRawFramePart(const uint8_t s) {
 void Command::processCurrentRawFramePartNumLed(const uint8_t s) {
   if (charType == TYPE_HEX) {
     currentRawFramePartNumLed =
-        hex2uint8(currentRawFramePartNumLed, s, paramPos);
+        hex2uint8(currentRawFramePartNumLed, s, paramPos % 2);
     paramPos++;
   } else {
     printErrorAndReset(ErrorNotHexNumberParameter, s);
@@ -365,7 +365,7 @@ uint16_t Command::hex2uint16(uint16_t val, const uint8_t hex,
     val <<= 8;
   }
 
-  val = (val & 0xFF00) | (hex2uint8(val & 0xFF, hex));
+  val = (val & 0xFF00) | (hex2uint8(val & 0xFF, hex, pos % 2));
 
   return val;
 }
@@ -383,15 +383,20 @@ uint32_t Command::hex2color(uint32_t val, const uint8_t hex,
     val <<= 8;
   }
 
-  val = (val & 0xFFFF00) | (hex2uint8(val & 0xFF, hex));
+  val = (val & 0xFFFF00) | (hex2uint8(val & 0xFF, hex, pos % 2));
 
   return val;
 }
 
-uint8_t Command::hex2uint8(uint8_t val, const uint8_t hex) {
+uint8_t Command::hex2uint8(uint8_t val, const uint8_t hex, const uint8_t pos) {
   uint8_t number = getHexVal(hex);
+  if (pos == 0) {
+    val = 0;
+  } else {
+    val <<= 4;
+  }
   // shift 4 to make space for new digit, and add the 4 bits of the new digit
-  return (val << 4) | (number & 0xF);
+  return (val) | (number & 0xF);
 }
 
 uint8_t Command::getHexVal(const uint8_t hex) {
