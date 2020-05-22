@@ -341,14 +341,22 @@ void Command::processRawFrame(const uint8_t s) {
   if (paramPos == HAS_NUM_SINGLE_COLOR) {
     paramPos = 0;
     strip->setPixelColor(numParam + ledPos, colorParam);
+    Serial.print("C");
+    Serial.print(colorParam, HEX);
+    Serial.print("L");
+    Serial.print(ledPos, HEX);
+    Serial.print("\n");
+    Serial.flush();
     ledPos++;
+    if (ledPos >= currentRawFramePartNumLed) {
+      Serial.print("DONE\n");
+      Serial.flush();
+      moreParams = false;
+    }
   }
   if (paramPos > HAS_NUM_SINGLE_COLOR) {
     printErrorAndReset(ErrorNotEnoughBytesColorParam, s, paramPos);
     return;
-  }
-  if (ledPos >= currentRawFramePartNumLed) {
-    moreParams = false;
   }
 }
 
