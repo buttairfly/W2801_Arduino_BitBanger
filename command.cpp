@@ -206,17 +206,18 @@ void Command::reset(void) {
   Serial.print("X");
   Serial.print("\n");
   Serial.flush();
-  colorParam = 0;
-  numParam = 0;
+  colorParam = 0x00000000;
+  numParam = 0x0000;
   hasCommand = false;
   hasNumParam = false;
   hasParityByte = false;
   moreParams = false;
-  paramPos = 0;
-  ledPos = 0;
+  paramPos = 0x00;
+  ledPos = 0x0000;
+  lastChar = 0x00;
+  command = 0x00;
   charType = TYPE_UNDEFINED;
   parity = PARITY_SEED;
-  lastChar = 0;
 }
 
 void Command::initCommand(const uint8_t s) {
