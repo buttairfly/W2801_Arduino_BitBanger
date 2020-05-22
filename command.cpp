@@ -346,16 +346,8 @@ void Command::processRawFrame(const uint8_t s) {
         uint16_t(currentRawFramePart) * uint16_t(currentRawFramePartNumLed) +
             ledPos,
         colorParam);
-    Serial.print("C");
-    Serial.print(colorParam, HEX);
-    Serial.print("L");
-    Serial.print(ledPos, HEX);
-    Serial.print("\n");
-    Serial.flush();
     ledPos++;
     if (ledPos >= currentRawFramePartNumLed) {
-      Serial.print("DONE\n");
-      Serial.flush();
       moreParams = false;
     }
   }
