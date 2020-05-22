@@ -63,12 +63,14 @@ class Command {
   boolean checkParity(const uint8_t receivedParity);
   uint8_t calcHexParity();
 
-  void processNumParam(const uint8_t c);
+  void processNumParam(const uint8_t s);
   void processColor(const uint8_t s);
+  void processCurrentRawFramePart(const uint8_t s);
+  void processCurrentRawFramePartNumLed(const uint8_t s);
 
   void processShade(const uint8_t s);
-  void processPixel(const uint8_t c);
-  void processRawFrame(const uint8_t c);
+  void processPixel(const uint8_t s);
+  void processRawFrame(const uint8_t s);
 
   uint32_t hex2color(uint32_t val, const uint8_t hex, const uint8_t pos);
   uint16_t hex2uint16(uint16_t val, const uint8_t hex, const uint8_t pos);
