@@ -24,35 +24,20 @@ void Command::ProcessCommand(const uint8_t s) {
       return;
     }
     switch (s) {
-      case VERSION:  // print version
-        hasNumParam = true;
-        initCommand(s);
-        return;
-      case LATCH_FRAME:  // latch buffered frame
-        hasNumParam = true;
-        initCommand(s);
-        return;
+      case VERSION:          // print version
+      case LATCH_FRAME:      // latch buffered frame
+        hasNumParam = true;  // VERSION and LATCH_FRAME do not have numParam
       case QUIET_MODE:  // enables or disables return of received parameters
-        initCommand(s);
-        return;
-      case INIT:  // Show number of initialized leds
+      case INIT:        // Show number of initialized leds
         initCommand(s);
         return;
       case PIXEL:  // Colorize pixel (position = numParam, parameter = color) no
-        // latch
-        moreParams = true;
-        initCommand(s);
-        return;
+                   // latch
       case SHADE:  // Shade first numParam leds (length = numParam, parameter =
-        // color) and latch
-        moreParams = true;
+                   // color) and latch
+      case RAW_FRAME:       // Frame input (length = numParam, colors) and latch
+        moreParams = true;  // PIXEL, SHADE and RAW_FRAME do have more params
         initCommand(s);
-        return;
-      case RAW_FRAME:  // Frame input (length = numParam, colors) and latch
-        moreParams = true;
-        initCommand(s);
-        Serial.println("RAW");
-        Serial.flush();
         return;
       default:
         printErrorAndReset(ErrorNotDefinedCommand, s);
@@ -325,6 +310,13 @@ void Command::processRawFrame(const uint8_t s) {
   if (paramPos == HAS_NUM_SINGLE_COLOR) {
     paramPos = 0;
     strip->setPixelColor(ledPos, colorParam);
+
+    Serial.print("C");
+    Serial.print(colorParam, HEX);
+    Serial.print("L");
+    Serial.print(ledPos, HEX);
+    Serial.print("\n");
+    Serial.flush();
     ledPos++;
   }
   if (paramPos > HAS_NUM_SINGLE_COLOR) {

@@ -8,11 +8,11 @@
 #include "device.ledpanel.arduino.error.hpp"
 #include "version.hpp"
 
-const int NUM_PARAM_CHARS = 4;
-const int HAS_NUM_SINGLE_COLOR = 6;
+const uint8_t NUM_PARAM_CHARS = 4;
+const uint8_t HAS_NUM_SINGLE_COLOR = 6;
 
-const int LATCH_TIMEOUT = 10;
-const int PARITY_SEED = 0xa5;
+const uint8_t LATCH_TIMEOUT = 10;
+const uint8_t PARITY_SEED = 0xa5;
 
 const uint8_t TYPE_UNDEFINED = 'D';
 const uint8_t TYPE_COMMAND = 'C';
