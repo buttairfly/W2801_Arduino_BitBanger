@@ -8,13 +8,13 @@ git pull
 
 source ${DIR}/version.sh
 
-sudo arduino-cli compile \
+arduino-cli compile \
   --fqbn arduino:avr:nano \
   --format json \
   ${DIR}
-sudo arduino-cli upload  \
+arduino-cli upload  \
   --fqbn arduino:avr:nano:cpu=atmega328old \
   --port /dev/ttyUSB0 \
-  --input ${DIR}/WS2801_Arduino_BitBanger.arduino.avr.nano.hex \
+  --input-file ${DIR}/WS2801_Arduino_BitBanger.arduino.avr.nano.hex \
   --format json \
   --verify
