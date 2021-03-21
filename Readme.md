@@ -21,15 +21,7 @@ https://github.com/novaspirit/rpi_zram
 
 - 'version.sh' will generate version.hpp
 
-- use the lightweight tags or annotated tags.
-
-### lightweight
-
-```sh
-git tag vx.x.x
-```
-
-### annotated
+- use the annotated tags
 
 ```sh
 git tag -a vx.x.x
