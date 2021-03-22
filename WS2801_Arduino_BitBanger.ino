@@ -37,18 +37,20 @@ uint8_t clockPin = 13;  // Blue wire on China PixelStripe ==> SCK D13
 
 // Set the first variable to the NUMBER of pixels. Number of pixels in a row
 const int INITIAL_NUM_LED = 1;
-// Adafruit_WS2801 strip = Adafruit_WS2801(INITIAL_NUM_LED, dataPin, clockPin);
 
 // Optional: leave off pin numbers to use hardware SPI
 // (pinout is then specific to each board and can't be changed)
+// Adafruit_WS2801 strip = Adafruit_WS2801(INITIAL_NUM_LED, dataPin, clockPin);
 Adafruit_WS2801 strip = Adafruit_WS2801(INITIAL_NUM_LED);
 Command command = Command(&strip);
 
 void setup() {
+  // Serial.begin(9600);
   Serial.begin(1152000);
 
   strip.begin();
-  strip.show();
+  demo();
+
   const unsigned long WAIT_TIME_MS = 10;
   unsigned long lastTime = 0;
   unsigned long time;
@@ -86,7 +88,6 @@ void readChar(void) {
 
 static uint16_t rainbowCyclePos = 0;
 void demo() {
-  const int waitTime = 0;
   rainbowCyclePos++;
   if (rainbowCyclePos >= 256 * 5) {
     rainbowCyclePos = 0;
