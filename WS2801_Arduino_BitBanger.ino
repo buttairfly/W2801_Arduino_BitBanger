@@ -4,6 +4,7 @@
 #include "command.hpp"
 
 #define SERIAL_BAUD 115200
+#define SERIAL_TIMEOUT_MS 1
 
 /*****************************************************************************
   Example sketch for driving Adafruit WS2801 pixels!
@@ -48,7 +49,7 @@ Command command = Command(&strip);
 
 void setup() {
   Serial.begin(SERIAL_BAUD);
-  Serial.setTimeout(1);
+  Serial.setTimeout(SERIAL_TIMEOUT_MS);
 
   strip.begin();
   demo();
