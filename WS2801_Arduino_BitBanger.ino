@@ -3,6 +3,8 @@
 #include "SPI.h"  // Comment out this line if using Trinket or Gemma
 #include "command.hpp"
 
+#define SERIAL_BAUD 115200
+
 /*****************************************************************************
   Example sketch for driving Adafruit WS2801 pixels!
 
@@ -45,8 +47,8 @@ Adafruit_WS2801 strip = Adafruit_WS2801(INITIAL_NUM_LED);
 Command command = Command(&strip);
 
 void setup() {
-  // Serial.begin(9600);
-  Serial.begin(1152000);
+  Serial.begin(SERIAL_BAUD);
+  Serial.setTimeout(1);
 
   strip.begin();
   demo();

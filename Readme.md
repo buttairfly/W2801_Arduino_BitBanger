@@ -9,7 +9,7 @@ https://github.com/novaspirit/rpi_zram
 ## compilation and upload
 
 - use 'upload-to-arduino.sh' to compile arduino script and upload to it
-- arduino must be plugged in at port `ttyUSB0`
+- arduino must be plugged in at device `/dev/ttyUSB0` or modify it at the upload script
 
 ```sh
 ./upload-to-arduino

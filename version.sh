@@ -10,7 +10,7 @@ NC='\033[0m' # No Color
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-BINARY=WS2801_Arduino_BitBanger
+BINARY=$1
 VERSION=`git describe --always --dirty`
 DATE=`date -u +%FT%T%z`
 echo -e "${GREEN}${BINARY}${NC}: compiled at ${BLUE}${DATE}${NC} with version ${LIGHT_BLUE}${VERSION}${NC}"
