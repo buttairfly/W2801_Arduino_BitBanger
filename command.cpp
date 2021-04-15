@@ -133,6 +133,7 @@ void Command::printErrorAndReset(const String errorCode, const uint8_t s,
   }
   Serial.print("\n");
   Serial.flush();
+  bufferCorrupted = true;
   reset();
 }
 
@@ -290,6 +291,7 @@ void Command::processShade(const uint8_t s) {
       for (uint16_t i = 0; i < numParam; i++) {
         strip->setPixelColor(i, colorParam);
       }
+      bufferCorrupted = false;
       reset();
     } else {
       printErrorAndReset(ErrorNotEnoughBytesColorParam, s, paramPos);
@@ -344,6 +346,9 @@ void Command::processRawFrame(const uint8_t s) {
       hasCurrentRawFramePartNumLed = true;
     }
     return;
+  }
+  if (currentRawFramePart == 0) {
+      bufferCorrupted = false;
   }
 
   processColor(s);

@@ -51,9 +51,11 @@ const String CMD_PARAM_QUIET_MODE = "Q NNNN                   P R";
 const String CMD_TYPE_RAW_FRAME =   "C HHHH    HH           HH     HHHHHH HHHHHH ... HHHHHH H R";
 const String CMD_PARAM_RAW_FRAME =  "W NNNN    NN           CC     000000 111111 ... 123456 P R";
 
-//                                     lenBuffer num i2c_parity P Ret
-const String CMD_TYPE_FRAME_I2C =   "C HHHH      H   H          H R";
-const String CMD_PARAM_FRAME_I2C =  "M NNNN      C   P          P R";
+//                                     lenBuffer frameNum i2c_parity P Ret
+const String CMD_TYPE_FRAME_I2C =   "C HHHH      HH       H          H R";
+const String CMD_PARAM_FRAME_I2C =  "M NNNN      CC       P          P R";
+//                                   frameNum c0 c1 c2 c3 c4    cn-1
+const String I2C_FRAME              "#        000111222333444...n-1n-1n-1";
 */
 
 class Command {
