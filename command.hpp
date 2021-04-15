@@ -27,20 +27,33 @@ const uint8_t INIT = 'I';
 const uint8_t QUIET_MODE = 'Q';
 const uint8_t SHADE = 'S';
 const uint8_t PIXEL = 'P';
+const uint8_t FRAME_I2C = 'M';
 const uint8_t RAW_FRAME = 'W';
 
 /*
-const String CMD_TYPE_VERSION =     "CHR";
-const String CMD_TYPE_LATCH =       "CHR";
-const String CMD_TYPE_INIT =        "CHHHHHR";
-const String CMD_TYPE_QUIET_MODE =  "CHHHHHR";
-const String CMD_TYPE_RAW_FRAME =   "WHHHH HHHH HHHHHHHHHHHHHHHHHHHHHHHH...HR";
+//                                     P Ret
+const String CMD_TYPE_VERSION =     "C H R";
+const String CMD_PARAM_VERSION =    "V P R";
 
-const String CMD_PARAM_VERSION =    "VPR";
-const String CMD_PARAM_LATCH =      "LPR";
-const String CMD_PARAM_INIT =       "INNNNPR";
-const String CMD_PARAM_QUIET_MODE = "QNNNNPR";
-const String CMD_PARAM_RAW_FRAME =  "WNNNN NNCC 222222333333222222333333...PR";
+//                                     P Ret
+const String CMD_TYPE_LATCH =       "C H R";
+const String CMD_PARAM_LATCH =      "L P R";
+
+//                                     lenLed  P Ret
+const String CMD_TYPE_INIT =        "C HHHH    H R";
+const String CMD_PARAM_INIT =       "I NNNN    P R";
+
+//                                     0 for off, other = on  P Ret
+const String CMD_TYPE_QUIET_MODE =  "C HHHH                   H R";
+const String CMD_PARAM_QUIET_MODE = "Q NNNN                   P R";
+
+//                                     lenLed  rawFramePart numLed color0 color1     colorN P Ret
+const String CMD_TYPE_RAW_FRAME =   "C HHHH    HH           HH     HHHHHH HHHHHH ... HHHHHH H R";
+const String CMD_PARAM_RAW_FRAME =  "W NNNN    NN           CC     000000 111111 ... 123456 P R";
+
+//                                     lenBuffer num i2c_parity P Ret
+const String CMD_TYPE_FRAME_I2C =   "C HHHH      H   H          H R";
+const String CMD_PARAM_FRAME_I2C =  "M NNNN      C   P          P R";
 */
 
 class Command {
@@ -90,6 +103,7 @@ class Command {
   boolean noCmd;
   boolean hasCurrentRawFramePart;
   boolean hasCurrentRawFramePartNumLed;
+  boolean bufferCorrupted;
   uint8_t currentRawFramePart;
   uint8_t currentRawFramePartNumLed;
   uint8_t charType;

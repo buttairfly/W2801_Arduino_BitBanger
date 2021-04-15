@@ -4,6 +4,7 @@ Command::Command(Adafruit_WS2801 *_strip) : strip(_strip) {
   initialized = false;
   quietMode = false;
   noCmd = false;
+  bufferCorrupted = false;
   latchTime = millis() - LATCH_TIMEOUT;
   reset();
 }
@@ -35,8 +36,9 @@ void Command::ProcessCommand(const uint8_t s) {
                    // latch
       case SHADE:  // Shade first numParam leds (length = numParam, parameter =
                    // color) and latch
+      case FRAME_I2C:
       case RAW_FRAME:       // Frame input (length = numParam, colors) and latch
-        moreParams = true;  // PIXEL, SHADE and RAW_FRAME do have more params
+        moreParams = true;  // PIXEL, SHADE, FRAME_I2C and RAW_FRAME do have more params
         initCommand(s);
         return;
       default:
@@ -188,9 +190,13 @@ void Command::latch(const uint8_t s) {
   if (isReturnCharType(s)) {
     unsigned long now = millis();
     if (now - latchTime > LATCH_TIMEOUT) {
-      strip->show();
-      latchTime = now;
-      reset();
+      if (!bufferCorrupted) {
+        strip->show();
+        latchTime = now;
+        reset();
+      } else {
+        printErrorAndReset(ErrorBufferCorrupted, command);
+      }
     } else {
       printErrorAndReset(ErrorLatchTimeout, 0x0, LATCH_TIMEOUT);
     }
@@ -220,6 +226,7 @@ void Command::initCommand(const uint8_t s) {
   if (initialized || s == INIT || s == VERSION | s == QUIET_MODE) {
     command = s;
     hasCommand = true;
+    bufferCorrupted = false;
   } else {
     printErrorAndReset(ErrorNotInitialized, s);
   }
@@ -418,13 +425,12 @@ void Command::setCharType(const uint8_t s) {
   switch (s) {
     case QUIET_MODE:  // enables or disables return of received parameters
     case INIT:        // init length of ws2801 strip
-    case PIXEL:  // Colorize pixel (position = numParam, parameter = color) no
-                 // latch
-    case SHADE:  // Shade first numParam leds (length = numParam, parameter =
-                 // color) and latch
-    case RAW_FRAME:    // Frame input (length = numParam, colors) and latch
-    case LATCH_FRAME:  // latch buffered frame
-    case VERSION:      // print version
+    case PIXEL:       // Colorize pixel (position = numParam, parameter = color) no latch
+    case SHADE:       // Shade first numParam leds (length = numParam, parameter = color) and latch
+    case FRAME_I2C:   // i2c frame length = numparam, numFrame % 16, data parity, parity, return)
+    case RAW_FRAME:   // Frame input (length = numParam, rawframepart, numled, colors)
+    case LATCH_FRAME: // latch buffered frame
+    case VERSION:     // print version
       charType = TYPE_COMMAND;
       return;
     case '\n':
